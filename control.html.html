@@ -68,7 +68,7 @@
                 const remaining = Math.max(0, Math.ceil((end - now) / 1000));
                 
                 localSecondsMemory = remaining;
-                await _supabase.from('reloj').update({ 
+                await _supabase.from('RELOJ').update({ 
                     status: 'PAUSED', 
                     seconds: remaining 
                 }).eq('id', 1);
