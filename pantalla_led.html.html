@@ -33,7 +33,7 @@
 
         async function syncInitial() {
             try {
-                const { data, error } = await _supabase.from('reloj').select('*').eq('id', 1).single();
+                const { data, error } = await _supabase.from('RELOJ').select('*').eq('id', 1).single();
                 if (data) updateClock(data);
                 if (error) console.error("Error de sync:", error);
             } catch (e) { console.error("Fallo de red:", e); }
