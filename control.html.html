@@ -42,7 +42,7 @@
 
         async function updateRemoteTime(sec) {
             localSecondsMemory = sec;
-            await _supabase.from('reloj').update({ status: 'PAUSED', seconds: sec }).eq('id', 1);
+            await _supabase.from('RELOJ').update({ status: 'PAUSED', seconds: sec }).eq('id', 1);
         }
 
         function manualSet() {
@@ -54,14 +54,14 @@
         async function triggerStart() {
             const end = new Date();
             end.setSeconds(end.getSeconds() + localSecondsMemory);
-            await _supabase.from('reloj').update({ 
+            await _supabase.from('RELOJ').update({ 
                 status: 'RUNNING', 
                 end_at: end.toISOString() 
             }).eq('id', 1);
         }
 
         async function triggerPause() {
-            const { data } = await _supabase.from('reloj').select('*').eq('id', 1).single();
+            const { data } = await _supabase.from('RELOJ').select('*').eq('id', 1).single();
             if (data && data.status === 'RUNNING') {
                 const now = new Date().getTime();
                 const end = new Date(data.end_at).getTime();
