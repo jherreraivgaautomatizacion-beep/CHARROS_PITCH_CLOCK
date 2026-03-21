@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLB REMOTE CONTROL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-zinc-950 text-white p-4 font-sans select-none">
+    <div class="max-w-md mx-auto">
+        <h1 class="text-red-600 font-black text-center text-xl mb-6 tracking-tighter italic">MLB REMOTE CONTROL v3</h1>
+
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <button onclick="updateRemoteTime(15)" class="bg-zinc-900 border border-zinc-700 py-6 rounded-2xl text-2xl font-bold active:bg-red-600 transition-colors">0:15</button>
+            <button onclick="updateRemoteTime(20)" class="bg-zinc-900 border border-zinc-700 py-6 rounded-2xl text-2xl font-bold active:bg-red-600 transition-colors">0:20</button>
+            <button onclick="updateRemoteTime(30)" class="bg-zinc-900 border border-zinc-700 py-6 rounded-2xl text-2xl font-bold active:bg-red-600 transition-colors">0:30</button>
+            <button onclick="updateRemoteTime(90)" class="bg-zinc-900 border border-zinc-700 py-6 rounded-2xl text-2xl font-bold active:bg-red-600 transition-colors">1:30</button>
+        </div>
+
+        <div class="bg-black p-4 rounded-3xl border border-zinc-800 mb-6">
+            <div class="flex gap-2 mb-3">
+                <input type="number" id="min" placeholder="MIN" class="w-full bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-center text-xl text-red-500">
+                <input type="number" id="seg" placeholder="SEG" class="w-full bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-center text-xl text-red-500">
+            </div>
+            <button onclick="manualSet()" class="w-full bg-zinc-800 py-3 rounded-xl font-bold uppercase text-xs tracking-widest">Cargar Manual</button>
+        </div>
+
+        <div class="flex gap-4 mb-10">
+            <button id="startBtn" onclick="triggerStart()" class="flex-[2] bg-green-700 py-10 rounded-3xl text-4xl font-black shadow-lg shadow-green-900/20 active:scale-95 transition-transform">START</button>
+            <button onclick="triggerPause()" class="flex-1 bg-zinc-900 border-2 border-red-600 py-10 rounded-3xl text-xl font-bold text-red-600 active:bg-red-950">PAUSE</button>
+        </div>
+
+        <p id="status" class="text-center text-zinc-500 text-[10px] uppercase tracking-widest">Sincronizado con Supabase</p>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://shtwudjhrrciwbvygphz.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_mDbvgneSToYLbcHXUgCXFw_sXk3S-Um";
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let localTime = 20;
+        let isClockRunning = false;
+        let clockEndAt = null;
+
+        // Escuchar estado actual al cargar
+        async function fetchState() {
+            const { data } = await supabaseClient.from('reloj').select('*').eq('id', 1).single();
+            if (data) {
+                localTime = data.seconds;
+                isClockRunning = data.status === 'RUNNING';
+                clockEndAt = data.end_at;
+            }
+        }
+
+        async function updateRemoteTime(sec) {
+            localTime = sec;
+            isClockRunning = false;
+            await supabaseClient.from('reloj').update({ status: 'PAUSED', seconds: sec }).eq('id', 1);
+        }
+
+        function manualSet() {
+            const m = parseInt(document.getElementById('min').value) || 0;
+            const s = parseInt(document.getElementById('seg').value) || 0;
+            updateRemoteTime((m * 60) + s);
+        }
+
+        async function triggerStart() {
+            const end = new Date();
+            end.setSeconds(end.getSeconds() + localTime);
+            await supabaseClient.from('reloj').update({ 
+                status: 'RUNNING', 
+                end_at: end.toISOString() 
+            }).eq('id', 1);
+        }
+
+        async function triggerPause() {
+            // Obtenemos el tiempo real que queda antes de pausar
+            const { data } = await supabaseClient.from('reloj').select('end_at, status').eq('id', 1).single();
+            
+            if (data.status === 'RUNNING') {
+                const now = new Date().getTime();
+                const end = new Date(data.end_at).getTime();
+                const remaining = Math.max(0, Math.ceil((end - now) / 1000));
+                
+                localTime = remaining; // Actualizamos memoria local
+                await supabaseClient.from('reloj').update({ 
+                    status: 'PAUSED', 
+                    seconds: remaining 
+                }).eq('id', 1);
+            }
+        }
+
+        fetchState();
+    </script>
+</body>
+</html>
