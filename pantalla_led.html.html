@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MLB LED DISPLAY - SYNC</title>
+    <title>MLB LED DISPLAY - CHARROS</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&display=swap');
@@ -16,6 +16,8 @@
             text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
             position: relative; top: -10px;
         }
+        .animate-pulse { animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
     </style>
 </head>
 <body>
@@ -24,17 +26,23 @@
     <script>
         const SUPABASE_URL = "https://shtwudjhrrciwbvygphz.supabase.co";
         const SUPABASE_KEY = "sb_publishable_mDbvgneSToYLbcHXUgCXFw_sXk3S-Um";
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Cambio crítico: _supabase para evitar error de definición
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let timerInterval = null;
 
         async function syncInitial() {
-            const { data } = await supabaseClient.from('reloj').select('*').eq('id', 1).single();
-            if (data) updateClock(data);
+            try {
+                const { data, error } = await _supabase.from('reloj').select('*').eq('id', 1).single();
+                if (data) updateClock(data);
+                if (error) console.error("Error de sync:", error);
+            } catch (e) { console.error("Fallo de red:", e); }
         }
 
         function updateClock(data) {
             clearInterval(timerInterval);
+            const el = document.getElementById('display');
+            
             if (data.status === 'RUNNING') {
                 timerInterval = setInterval(() => {
                     const now = new Date().getTime();
@@ -43,11 +51,11 @@
                     render(diff);
                     if (diff <= 0) {
                         clearInterval(timerInterval);
-                        document.getElementById('display').classList.add('animate-pulse');
+                        el.classList.add('animate-pulse');
                     }
                 }, 200);
             } else {
-                document.getElementById('display').classList.remove('animate-pulse');
+                el.classList.remove('animate-pulse');
                 render(data.seconds);
             }
         }
@@ -58,7 +66,8 @@
             document.getElementById('display').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
         }
 
-        supabaseClient.channel('reloj-changes')
+        // Suscripción en tiempo real corregida
+        _supabase.channel('reloj-realtime')
         .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'reloj' }, (payload) => {
             updateClock(payload.new);
         }).subscribe();
