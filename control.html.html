@@ -10,26 +10,26 @@
 <body class="bg-black text-white p-4 select-none italic font-bold text-center">
     <div class="max-w-md mx-auto">
         <div id="status-bar" class="py-2 mb-4 rounded-full text-xs border border-zinc-700 bg-zinc-900 transition-all uppercase">
-            ESTADO: <span id="status-text">ESPERANDO...</span>
+            ESTADO: <span id="status-text">CONECTANDO...</span>
         </div>
 
-        <button onclick="setRealTimeMode()" class="w-full bg-blue-700 py-6 rounded-3xl text-2xl mb-4 border-2 border-blue-400 active:bg-blue-500 shadow-lg shadow-blue-900/30">
+        <button onclick="setRealTimeMode()" class="w-full bg-red-900/40 py-6 rounded-3xl text-2xl mb-4 border-2 border-red-600 active:bg-red-600 shadow-lg transition-colors">
             MOSTRAR HORA REAL
         </button>
 
         <div class="grid grid-cols-2 gap-3 mb-4 text-2xl">
-            <button onclick="updateTime(15)" class="bg-zinc-900 h-20 rounded-2xl border border-zinc-700 active:bg-red-600">0:15</button>
-            <button onclick="updateTime(20)" class="bg-zinc-900 h-20 rounded-2xl border border-zinc-700 active:bg-red-600">0:20</button>
-            <button onclick="updateTime(30)" class="bg-zinc-900 h-20 rounded-2xl border border-zinc-700 active:bg-red-600">0:30</button>
-            <button onclick="updateTime(90)" class="bg-zinc-900 h-20 rounded-2xl border border-zinc-700 active:bg-red-600">1:30</button>
+            <button onclick="quickStart(0)" class="bg-zinc-900 h-20 rounded-2xl border border-zinc-700 active:bg-red-600">0:00</button>
+            <button onclick="quickStart(20)" class="bg-zinc-900 h-20 rounded-2xl border border-zinc-700 active:bg-red-600">0:20</button>
+            <button onclick="quickStart(30)" class="bg-zinc-900 h-20 rounded-2xl border border-zinc-700 active:bg-red-600">0:30</button>
+            <button onclick="quickStart(120)" class="bg-zinc-900 h-20 rounded-2xl border border-zinc-700 active:bg-red-600">2:00</button>
         </div>
 
         <div class="bg-zinc-900 p-4 rounded-3xl mb-4 border border-zinc-800">
-            <div class="flex gap-2 mb-3 text-black">
-                <input type="number" id="min" placeholder="MIN" class="w-full bg-white p-3 rounded-xl text-center text-xl">
-                <input type="number" id="seg" placeholder="SEG" class="w-full bg-white p-3 rounded-xl text-center text-xl">
+            <div class="flex gap-2 mb-3 text-black font-sans">
+                <input type="number" id="min" placeholder="MIN" class="w-full bg-white p-3 rounded-xl text-center text-xl font-bold">
+                <input type="number" id="seg" placeholder="SEG" class="w-full bg-white p-3 rounded-xl text-center text-xl font-bold">
             </div>
-            <button onclick="manualSet()" class="w-full bg-zinc-700 py-2 rounded-xl text-xs uppercase text-white">Cargar Manual</button>
+            <button onclick="manualSet()" class="w-full bg-zinc-700 py-2 rounded-xl text-xs uppercase text-white">Cargar Manual (Pausado)</button>
         </div>
 
         <div class="flex flex-col gap-3">
@@ -50,11 +50,11 @@
             const text = document.getElementById('status-text');
             text.innerText = status;
             if (status === 'CLOCK') {
-                bar.className = "py-2 mb-4 rounded-full text-xs border border-blue-500 bg-blue-950/30 text-blue-400";
+                bar.className = "py-2 mb-4 rounded-full text-xs border border-red-500 bg-red-950/30 text-red-400 uppercase";
             } else if (status === 'RUNNING') {
-                bar.className = "py-2 mb-4 rounded-full text-xs border border-green-500 bg-green-950/30 text-green-400";
+                bar.className = "py-2 mb-4 rounded-full text-xs border border-green-500 bg-green-950/30 text-green-400 uppercase";
             } else {
-                bar.className = "py-2 mb-4 rounded-full text-xs border border-red-500 bg-red-950/30 text-red-400";
+                bar.className = "py-2 mb-4 rounded-full text-xs border border-red-500 bg-red-950/30 text-red-400 uppercase";
             }
         }
 
@@ -63,6 +63,20 @@
             await _supabase.from('RELOJ').update({ status: 'CLOCK' }).eq('id', 1);
         }
 
+        // Función para botones fijos: Carga e INICIA de inmediato
+        async function quickStart(sec) {
+            lastSetSeconds = sec;
+            const end = new Date();
+            end.setSeconds(end.getSeconds() + sec);
+            updateUI('RUNNING');
+            await _supabase.from('RELOJ').update({ 
+                status: 'RUNNING', 
+                seconds: sec,
+                end_at: end.toISOString() 
+            }).eq('id', 1);
+        }
+
+        // Función para manual: Solo carga y pausa
         async function updateTime(sec) {
             lastSetSeconds = sec;
             updateUI('PAUSED');
@@ -92,9 +106,10 @@
             }
         }
 
-        async function triggerReset() { updateTime(lastSetSeconds); }
+        async function triggerReset() { quickStart(lastSetSeconds); }
 
         _supabase.channel('reloj-ui').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'RELOJ' }, p => updateUI(p.new.status)).subscribe();
+        updateUI('PAUSED');
     </script>
 </body>
 </html>
