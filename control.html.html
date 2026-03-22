@@ -3,61 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MLB REMOTE - CHARROS</title>
+    <title>CONTROL - CHARROS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <style>body { touch-action: manipulation; }</style>
 </head>
-<body class="bg-zinc-950 text-white p-4 font-sans select-none">
+<body class="bg-black text-white p-4 select-none italic font-bold text-center">
     <div class="max-w-md mx-auto">
-        <h1 class="text-red-600 font-black text-center text-xl mb-6 italic">CHARROS REMOTE CONTROL</h1>
-
-        <div class="grid grid-cols-2 gap-3 mb-6">
-            <button onclick="updateRemoteTime(00)" class="bg-zinc-900 border border-zinc-700 py-6 rounded-2xl text-2xl font-bold active:bg-red-600">0:00</button>
-            <button onclick="updateRemoteTime(20)" class="bg-zinc-900 border border-zinc-700 py-6 rounded-2xl text-2xl font-bold active:bg-red-600">0:20</button>
-            <button onclick="updateRemoteTime(30)" class="bg-zinc-900 border border-zinc-700 py-6 rounded-2xl text-2xl font-bold active:bg-red-600">0:30</button>
-            <button onclick="updateRemoteTime(120)" class="bg-zinc-900 border border-zinc-700 py-6 rounded-2xl text-2xl font-bold active:bg-red-600">2:00</button>
+        <div id="status-bar" class="py-2 mb-4 rounded-full text-xs border border-zinc-700 bg-zinc-900 transition-all uppercase">
+            ESTADO: <span id="status-text">ESPERANDO...</span>
         </div>
 
-        <div class="flex gap-4">
-            <button onclick="triggerStart()" class="flex-[2] bg-green-700 py-10 rounded-3xl text-4xl font-black active:scale-95">START</button>
-            <button onclick="triggerPause()" class="flex-1 bg-zinc-900 border-2 border-red-600 py-10 rounded-3xl text-xl font-bold text-red-600">PAUSE</button>
+        <button onclick="setRealTimeMode()" class="w-full bg-blue-700 py-6 rounded-3xl text-2xl mb-4 border-2 border-blue-400 active:bg-blue-500 shadow-lg shadow-blue-900/30">
+            MOSTRAR HORA REAL
+        </button>
+
+        <div class="grid grid-cols-2 gap-3 mb-4 text-2xl">
+            <button onclick="updateTime(15)" class="bg-zinc-900 h-20 rounded-2xl border border-zinc-700 active:bg-red-600">0:15</button>
+            <button onclick="updateTime(20)" class="bg-zinc-900 h-20 rounded-2xl border border-zinc-700 active:bg-red-600">0:20</button>
+            <button onclick="updateTime(30)" class="bg-zinc-900 h-20 rounded-2xl border border-zinc-700 active:bg-red-600">0:30</button>
+            <button onclick="updateTime(90)" class="bg-zinc-900 h-20 rounded-2xl border border-zinc-700 active:bg-red-600">1:30</button>
+        </div>
+
+        <div class="bg-zinc-900 p-4 rounded-3xl mb-4 border border-zinc-800">
+            <div class="flex gap-2 mb-3 text-black">
+                <input type="number" id="min" placeholder="MIN" class="w-full bg-white p-3 rounded-xl text-center text-xl">
+                <input type="number" id="seg" placeholder="SEG" class="w-full bg-white p-3 rounded-xl text-center text-xl">
+            </div>
+            <button onclick="manualSet()" class="w-full bg-zinc-700 py-2 rounded-xl text-xs uppercase text-white">Cargar Manual</button>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <button onclick="triggerStart()" class="w-full bg-green-700 py-10 rounded-3xl text-5xl active:bg-green-600 transition-transform active:scale-95">START</button>
+            <div class="flex gap-3">
+                <button onclick="triggerPause()" class="flex-1 bg-red-800 py-8 rounded-3xl text-xl active:bg-red-700">PAUSE</button>
+                <button onclick="triggerReset()" class="flex-1 bg-zinc-600 py-8 rounded-3xl text-xl active:bg-zinc-500">RESET</button>
+            </div>
         </div>
     </div>
 
     <script>
-        const SUPABASE_URL = "https://shtwudjhrrciwbvygphz.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_mDbvgneSToYLbcHXUgCXFw_sXk3S-Um";
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const _supabase = supabase.createClient("https://shtwudjhrrciwbvygphz.supabase.co", "sb_publishable_mDbvgneSToYLbcHXUgCXFw_sXk3S-Um");
+        let lastSetSeconds = 20;
 
-        let localSecondsMemory = 20;
+        function updateUI(status) {
+            const bar = document.getElementById('status-bar');
+            const text = document.getElementById('status-text');
+            text.innerText = status;
+            if (status === 'CLOCK') {
+                bar.className = "py-2 mb-4 rounded-full text-xs border border-blue-500 bg-blue-950/30 text-blue-400";
+            } else if (status === 'RUNNING') {
+                bar.className = "py-2 mb-4 rounded-full text-xs border border-green-500 bg-green-950/30 text-green-400";
+            } else {
+                bar.className = "py-2 mb-4 rounded-full text-xs border border-red-500 bg-red-950/30 text-red-400";
+            }
+        }
 
-        async function updateRemoteTime(sec) {
-            localSecondsMemory = sec;
-            // CAMBIO CLAVE: RELOJ en mayúsculas
-            const { error } = await _supabase.from('RELOJ').update({ status: 'PAUSED', seconds: sec }).eq('id', 1);
-            if(error) console.log("Error:", error);
+        async function setRealTimeMode() {
+            updateUI('CLOCK');
+            await _supabase.from('RELOJ').update({ status: 'CLOCK' }).eq('id', 1);
+        }
+
+        async function updateTime(sec) {
+            lastSetSeconds = sec;
+            updateUI('PAUSED');
+            await _supabase.from('RELOJ').update({ status: 'PAUSED', seconds: sec }).eq('id', 1);
+        }
+
+        function manualSet() {
+            const m = parseInt(document.getElementById('min').value) || 0;
+            const s = parseInt(document.getElementById('seg').value) || 0;
+            updateTime((m * 60) + s);
         }
 
         async function triggerStart() {
             const end = new Date();
-            end.setSeconds(end.getSeconds() + localSecondsMemory);
-            await _supabase.from('RELOJ').update({ 
-                status: 'RUNNING', 
-                end_at: end.toISOString() 
-            }).eq('id', 1);
+            end.setSeconds(end.getSeconds() + lastSetSeconds);
+            updateUI('RUNNING');
+            await _supabase.from('RELOJ').update({ status: 'RUNNING', end_at: end.toISOString() }).eq('id', 1);
         }
 
         async function triggerPause() {
             const { data } = await _supabase.from('RELOJ').select('*').eq('id', 1).single();
             if (data && data.status === 'RUNNING') {
-                const now = new Date().getTime();
-                const end = new Date(data.end_at).getTime();
-                const remaining = Math.max(0, Math.ceil((end - now) / 1000));
-                localSecondsMemory = remaining;
-                await _supabase.from('RELOJ').update({ status: 'PAUSED', seconds: remaining }).eq('id', 1);
+                const diff = Math.max(0, Math.ceil((new Date(data.end_at).getTime() - new Date().getTime()) / 1000));
+                lastSetSeconds = diff;
+                updateUI('PAUSED');
+                await _supabase.from('RELOJ').update({ status: 'PAUSED', seconds: diff }).eq('id', 1);
             }
         }
+
+        async function triggerReset() { updateTime(lastSetSeconds); }
+
+        _supabase.channel('reloj-ui').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'RELOJ' }, p => updateUI(p.new.status)).subscribe();
     </script>
 </body>
 </html>
