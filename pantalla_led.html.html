@@ -9,12 +9,12 @@
         body { margin: 0; background: #000; overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; cursor: none; }
         #display {
             font-family: 'Barlow Condensed', sans-serif;
-            font-weight: 900; text-align: center;
+            font-weight: 900; color: #FF0000; text-align: center;
             width: 100vw; display: inline-block;
             font-variant-numeric: tabular-nums;
             font-size: 35vw; line-height: 1; letter-spacing: 0.05em;
             transform: scaleY(1.8);
-            transition: color 0.3s ease; /* Suaviza el cambio de color */
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
         }
         .animate-pulse { animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
@@ -40,31 +40,21 @@
             el.classList.remove('animate-pulse');
 
             if (data.status === 'CLOCK') {
-                // MODO HORA REAL -> COLOR BLANCO
-                el.style.color = "#FFFFFF";
-                el.style.textShadow = "0 0 20px rgba(255, 255, 255, 0.3)";
+                // MODO HORA REAL (Ahora también en Rojo)
                 clockInterval = setInterval(() => {
                     const now = new Date();
-                    const h = String(now.getHours()).padStart(2, '0');
-                    const m = String(now.getMinutes()).padStart(2, '0');
-                    el.textContent = `${h}:${m}`;
+                    el.textContent = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
                 }, 1000);
+            } else if (data.status === 'RUNNING') {
+                // MODO CRONÓMETRO CORRIENDO
+                timerInterval = setInterval(() => {
+                    const diff = Math.max(0, Math.ceil((new Date(data.end_at).getTime() - new Date().getTime()) / 1000));
+                    render(diff);
+                    if (diff <= 0) { clearInterval(timerInterval); el.classList.add('animate-pulse'); }
+                }, 200);
             } else {
-                // MODO CRONÓMETRO -> COLOR ROJO
-                el.style.color = "#FF0000";
-                el.style.textShadow = "0 0 20px rgba(255, 0, 0, 0.5)";
-                if (data.status === 'RUNNING') {
-                    timerInterval = setInterval(() => {
-                        const diff = Math.max(0, Math.ceil((new Date(data.end_at).getTime() - new Date().getTime()) / 1000));
-                        render(diff);
-                        if (diff <= 0) { 
-                            clearInterval(timerInterval); 
-                            el.classList.add('animate-pulse'); 
-                        }
-                    }, 200);
-                } else {
-                    render(data.seconds);
-                }
+                // MODO PAUSA
+                render(data.seconds);
             }
         }
 
