@@ -2,53 +2,69 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MLB LED DISPLAY - CHARROS</title>
+    <title>MLB DISPLAY - CHARROS</title>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&display=swap');
-        body { margin: 0; background: #000; overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        body { margin: 0; background: #000; overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; cursor: none; }
         #display {
             font-family: 'Barlow Condensed', sans-serif;
-            font-weight: 900; color: #FF0000; text-align: center;
-            font-size: 32vw; line-height: 1; letter-spacing: 0.12em;
-            transform: scaleY(1.8); display: inline-block;
-            text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
-            position: relative; top: -10px;
+            font-weight: 900; text-align: center;
+            width: 100vw; display: inline-block;
+            font-variant-numeric: tabular-nums;
+            font-size: 35vw; line-height: 1; letter-spacing: 0.05em;
+            transform: scaleY(1.8);
+            transition: color 0.3s ease; /* Suaviza el cambio de color */
         }
         .animate-pulse { animation: pulse 1s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
     </style>
 </head>
-<body>
+<body onclick="document.documentElement.requestFullscreen()">
     <div id="display">00:00</div>
 
     <script>
-        const SUPABASE_URL = "https://shtwudjhrrciwbvygphz.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_mDbvgneSToYLbcHXUgCXFw_sXk3S-Um";
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+        const _supabase = supabase.createClient("https://shtwudjhrrciwbvygphz.supabase.co", "sb_publishable_mDbvgneSToYLbcHXUgCXFw_sXk3S-Um");
         let timerInterval = null;
+        let clockInterval = null;
 
-        async function syncInitial() {
-            // CORRECCIÓN: RELOJ en mayúsculas
+        async function sync() {
             const { data } = await _supabase.from('RELOJ').select('*').eq('id', 1).single();
-            if (data) updateClock(data);
+            if (data) updateDisplay(data);
         }
 
-        function updateClock(data) {
+        function updateDisplay(data) {
             clearInterval(timerInterval);
+            clearInterval(clockInterval);
             const el = document.getElementById('display');
-            if (data.status === 'RUNNING') {
-                timerInterval = setInterval(() => {
-                    const now = new Date().getTime();
-                    const end = new Date(data.end_at).getTime();
-                    const diff = Math.max(0, Math.ceil((end - now) / 1000));
-                    render(diff);
-                    if (diff <= 0) { clearInterval(timerInterval); el.classList.add('animate-pulse'); }
-                }, 200);
+            el.classList.remove('animate-pulse');
+
+            if (data.status === 'CLOCK') {
+                // MODO HORA REAL -> COLOR BLANCO
+                el.style.color = "#FFFFFF";
+                el.style.textShadow = "0 0 20px rgba(255, 255, 255, 0.3)";
+                clockInterval = setInterval(() => {
+                    const now = new Date();
+                    const h = String(now.getHours()).padStart(2, '0');
+                    const m = String(now.getMinutes()).padStart(2, '0');
+                    el.textContent = `${h}:${m}`;
+                }, 1000);
             } else {
-                el.classList.remove('animate-pulse');
-                render(data.seconds);
+                // MODO CRONÓMETRO -> COLOR ROJO
+                el.style.color = "#FF0000";
+                el.style.textShadow = "0 0 20px rgba(255, 0, 0, 0.5)";
+                if (data.status === 'RUNNING') {
+                    timerInterval = setInterval(() => {
+                        const diff = Math.max(0, Math.ceil((new Date(data.end_at).getTime() - new Date().getTime()) / 1000));
+                        render(diff);
+                        if (diff <= 0) { 
+                            clearInterval(timerInterval); 
+                            el.classList.add('animate-pulse'); 
+                        }
+                    }, 200);
+                } else {
+                    render(data.seconds);
+                }
             }
         }
 
@@ -58,13 +74,8 @@
             document.getElementById('display').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
         }
 
-        // CORRECCIÓN: Escuchar cambios en RELOJ (mayúsculas)
-        _supabase.channel('reloj-realtime')
-        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'RELOJ' }, (payload) => {
-            updateClock(payload.new);
-        }).subscribe();
-
-        syncInitial();
+        _supabase.channel('reloj-realtime').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'RELOJ' }, payload => updateDisplay(payload.new)).subscribe();
+        sync();
     </script>
 </body>
 </html>
