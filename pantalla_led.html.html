@@ -22,7 +22,6 @@
 </head>
 <body onclick="document.documentElement.requestFullscreen()">
     <div id="display">00:00</div>
-
     <script>
         const _supabase = supabase.createClient("https://shtwudjhrrciwbvygphz.supabase.co", "sb_publishable_mDbvgneSToYLbcHXUgCXFw_sXk3S-Um");
         let timerInterval = null;
@@ -40,20 +39,17 @@
             el.classList.remove('animate-pulse');
 
             if (data.status === 'CLOCK') {
-                // MODO HORA REAL (Ahora también en Rojo)
                 clockInterval = setInterval(() => {
                     const now = new Date();
                     el.textContent = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
                 }, 1000);
             } else if (data.status === 'RUNNING') {
-                // MODO CRONÓMETRO CORRIENDO
                 timerInterval = setInterval(() => {
                     const diff = Math.max(0, Math.ceil((new Date(data.end_at).getTime() - new Date().getTime()) / 1000));
                     render(diff);
                     if (diff <= 0) { clearInterval(timerInterval); el.classList.add('animate-pulse'); }
                 }, 200);
             } else {
-                // MODO PAUSA
                 render(data.seconds);
             }
         }
