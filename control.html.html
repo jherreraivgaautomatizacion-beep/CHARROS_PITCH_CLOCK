@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CONTROL - CHARROS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
@@ -10,54 +10,54 @@
         .tabular { font-variant-numeric: tabular-nums; }
         .key-btn { background: #18181b; height: 50px; border-radius: 1rem; border: 1px solid #3f3f46; font-size: 1.4rem; }
         .hidden { display: none !important; }
-        body { touch-action: manipulation; height: 100dvh; overflow: hidden; }
-        button:active { transform: scale(0.96); filter: brightness(1.2); }
+        body { touch-action: manipulation; height: 100vh; height: 100dvh; overflow: hidden; background-color: black; }
+        .grid-layout { display: grid; grid-template-rows: auto auto auto auto 1fr auto; height: 100%; gap: 8px; }
     </style>
 </head>
-<body class="bg-black text-white p-2 select-none italic font-bold text-center h-screen flex flex-col">
+<body class="text-white select-none italic font-bold text-center p-2">
     
     <div id="lock" class="fixed inset-0 bg-black flex flex-col items-center justify-center z-50 p-4">
-        <div class="mb-8">
-            <h1 class="text-red-600 text-2xl font-black uppercase italic tracking-tighter">CHARROS</h1>
-            <p class="text-white text-[10px] tracking-[0.3em] font-sans mt-2">LIGA MEXICANA DE BEISBOL</p>
-        </div>
+        <h1 class="text-red-600 text-2xl font-black uppercase italic mb-4">CHARROS</h1>
+        <p class="text-white text-[10px] mb-6 font-sans">LIGA MEXICANA DE BEISBOL</p>
         <input type="password" id="p-disp" readonly placeholder="••••" class="bg-transparent text-center text-5xl mb-8 outline-none text-red-600 tabular tracking-[0.4em] w-full">
         <div class="grid grid-cols-3 gap-3 w-full max-w-[280px]">
             <button onclick="a('1')" class="key-btn">1</button><button onclick="a('2')" class="key-btn">2</button><button onclick="a('3')" class="key-btn">3</button>
             <button onclick="a('4')" class="key-btn">4</button><button onclick="a('5')" class="key-btn">5</button><button onclick="a('6')" class="key-btn">6</button>
             <button onclick="a('7')" class="key-btn">7</button><button onclick="a('8')" class="key-btn">8</button><button onclick="a('9')" class="key-btn">9</button>
-            <button onclick="c()" class="key-btn text-[10px] text-zinc-500 font-sans">CLEAR</button><button onclick="a('0')" class="key-btn">0</button>
-            <button onclick="v()" class="key-btn bg-green-900/40 border-green-600 text-xs font-sans">ENT</button>
+            <button onclick="c()" class="key-btn text-[10px] text-zinc-500 font-sans uppercase">Borrar</button><button onclick="a('0')" class="key-btn">0</button>
+            <button onclick="v()" class="key-btn bg-green-900/40 border-green-600 text-xs font-sans uppercase">Ent</button>
         </div>
     </div>
 
-    <div id="panel" class="hidden flex-1 flex flex-col justify-between max-w-md mx-auto w-full py-1">
+    <div id="panel" class="hidden grid-layout max-w-md mx-auto w-full">
         
-        <div class="bg-zinc-900 border border-zinc-700 rounded-2xl py-1">
-            <div id="r-disp" class="text-4xl tabular text-red-600 font-black leading-tight">00:00</div>
-            <div id="st-bar" class="text-[8px] uppercase tracking-widest text-zinc-500 border-t border-zinc-800 mt-1 pt-0.5">ESTADO: <span id="st-txt">SYNC</span></div>
+        <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-1">
+            <div id="r-disp" class="text-4xl tabular text-red-600 font-black leading-none">00:00</div>
+            <div id="st-bar" class="text-[8px] uppercase text-zinc-500 mt-1">ESTADO: <span id="st-txt">SYNC</span></div>
         </div>
 
-        <button onclick="m('CLOCK')" class="w-full bg-red-900/20 py-2.5 rounded-xl text-sm border border-red-700 uppercase">Mostrar Hora Real</button>
+        <button onclick="m('CLOCK')" class="w-full bg-red-900/20 py-3 rounded-xl text-sm border border-red-700 uppercase">Mostrar Hora Real</button>
 
-        <div class="grid grid-cols-4 gap-1.5">
-            <button onclick="run(0)" class="bg-zinc-900 h-10 rounded-lg border border-zinc-700 text-sm">0:00</button>
-            <button onclick="run(20)" class="bg-zinc-900 h-10 rounded-lg border border-zinc-700 text-sm">0:20</button>
-            <button onclick="run(30)" class="bg-zinc-900 h-10 rounded-lg border border-zinc-700 text-sm">0:30</button>
-            <button onclick="run(120)" class="bg-zinc-900 h-10 rounded-lg border border-zinc-700 text-sm">2:00</button>
+        <div class="grid grid-cols-4 gap-2">
+            <button onclick="run(0)" class="bg-zinc-900 py-3 rounded-lg border border-zinc-700 text-sm">0:00</button>
+            <button onclick="run(20)" class="bg-zinc-900 py-3 rounded-lg border border-zinc-700 text-sm">0:20</button>
+            <button onclick="run(30)" class="bg-zinc-900 py-3 rounded-lg border border-zinc-700 text-sm">0:30</button>
+            <button onclick="run(120)" class="bg-zinc-900 py-3 rounded-lg border border-zinc-700 text-sm">2:00</button>
         </div>
 
-        <div class="flex gap-1.5 h-10">
-            <input type="number" id="im" placeholder="MIN" class="flex-1 bg-zinc-800 text-white p-1 rounded-lg text-center font-bold text-sm border border-zinc-700 outline-none">
-            <input type="number" id="is" placeholder="SEG" class="flex-1 bg-zinc-800 text-white p-1 rounded-lg text-center font-bold text-sm border border-zinc-700 outline-none">
-            <button onclick="man()" class="bg-zinc-600 px-3 rounded-lg text-[9px] uppercase font-sans">Cargar</button>
+        <div class="flex gap-2 h-10">
+            <input type="number" id="im" placeholder="MIN" class="flex-1 bg-zinc-800 text-white rounded-lg text-center font-bold text-sm border border-zinc-700 outline-none">
+            <input type="number" id="is" placeholder="SEG" class="flex-1 bg-zinc-800 text-white rounded-lg text-center font-bold text-sm border border-zinc-700 outline-none">
+            <button onclick="man()" class="bg-zinc-600 px-4 rounded-lg text-[9px] uppercase font-sans">Cargar</button>
         </div>
 
-        <div class="flex flex-col gap-1.5">
-            <button onclick="start()" class="w-full bg-green-700 py-6 rounded-2xl text-5xl shadow-lg border-b-4 border-green-900 active:border-b-0">START</button>
-            <div class="flex gap-1.5 h-14">
-                <button onclick="pause()" class="flex-1 bg-red-900 rounded-xl text-sm font-sans uppercase border-b-4 border-red-950 active:border-b-0">PAUSE</button>
-                <button onclick="reset()" class="flex-1 bg-zinc-700 rounded-xl text-sm font-sans uppercase border-b-4 border-zinc-800 active:border-b-0">RESET</button>
+        <div></div>
+
+        <div class="flex flex-col gap-2 pb-2">
+            <button onclick="start()" class="w-full bg-green-700 py-6 rounded-2xl text-4xl shadow-lg border-b-4 border-green-900 active:border-b-0 uppercase">Start</button>
+            <div class="flex gap-2 h-14">
+                <button onclick="pause()" class="flex-1 bg-red-900 rounded-xl text-sm font-sans uppercase border-b-4 border-red-950 active:border-b-0">Pause</button>
+                <button onclick="reset()" class="flex-1 bg-zinc-700 rounded-xl text-sm font-sans uppercase border-b-4 border-zinc-800 active:border-b-0">Reset</button>
             </div>
         </div>
         
@@ -70,23 +70,23 @@
 
         function a(n) { if(cp.length<4) {cp += n; document.getElementById('p-disp').value = cp;} }
         function c() { cp = ""; document.getElementById('p-disp').value = ""; }
-        function v() { if(btoa(cp) === HASH) { document.getElementById('lock').classList.add('hidden'); document.getElementById('panel').classList.remove('hidden'); document.getElementById('panel').classList.add('flex'); init(); } else { alert("DENEGADO"); c(); } }
+        function v() { if(btoa(cp) === HASH) { document.getElementById('lock').classList.add('hidden'); document.getElementById('panel').classList.remove('hidden'); init(); } else { alert("DENEGADO"); c(); } }
 
         function u(d) {
             clearInterval(t);
             const disp = document.getElementById('r-disp'), txt = document.getElementById('st-txt'), bar = document.getElementById('st-bar');
             txt.innerText = d.status;
             if(d.status === 'CLOCK') {
-                bar.className = "text-[8px] uppercase tracking-widest text-red-500 border-t border-red-900/30 mt-1 pt-0.5";
+                bar.className = "text-[8px] uppercase tracking-widest text-red-500 mt-1";
                 t = setInterval(() => { const n = new Date(); disp.innerText = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`; }, 1000);
             } else if(d.status === 'RUNNING') {
-                bar.className = "text-[8px] uppercase tracking-widest text-green-500 border-t border-green-900/30 mt-1 pt-0.5";
+                bar.className = "text-[8px] uppercase tracking-widest text-green-500 mt-1";
                 t = setInterval(() => {
                     const diff = Math.max(0, Math.ceil((new Date(d.end_at) - new Date()) / 1000));
                     disp.innerText = `${String(Math.floor(diff/60)).padStart(2,'0')}:${String(diff%60).padStart(2,'0')}`;
                 }, 200);
             } else {
-                bar.className = "text-[8px] uppercase tracking-widest text-red-500 border-t border-red-900/30 mt-1 pt-0.5";
+                bar.className = "text-[8px] uppercase tracking-widest text-red-500 mt-1";
                 disp.innerText = `${String(Math.floor(d.seconds/60)).padStart(2,'0')}:${String(d.seconds%60).padStart(2,'0')}`;
             }
         }
