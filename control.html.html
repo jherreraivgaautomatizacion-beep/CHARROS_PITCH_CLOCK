@@ -2,19 +2,32 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>CONTROL - CHARROS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
         .tabular { font-variant-numeric: tabular-nums; }
+        /* AJUSTA EL ALTO DE LOS BOTONES DE PIN AQUÍ */
         .key-btn { background: #18181b; height: 50px; border-radius: 1rem; border: 1px solid #3f3f46; font-size: 1.4rem; }
         .hidden { display: none !important; }
-        body { touch-action: manipulation; height: 100vh; height: 100dvh; overflow: hidden; background-color: black; }
-        .grid-layout { display: grid; grid-template-rows: auto auto auto auto 1fr auto; height: 100%; gap: 8px; }
+        /* ALTURA TOTAL DE LA PANTALLA */
+        body { touch-action: manipulation; height: 100dvh; overflow: hidden; background-color: black; margin: 0; padding: 0; }
+        
+        /* ESTA ES LA ESTRUCTURA PRINCIPAL */
+        /* Cambia el gap-1 por gap-2 si quieres más espacio entre filas */
+        .grid-layout { 
+            display: grid; 
+            grid-template-rows: auto auto auto auto 1fr auto; 
+            height: 100dvh; 
+            gap: 4px; /* Espacio vertical entre secciones */
+            padding: 8px; /* Espacio con la orilla de la pantalla */
+            width: 100%;
+            box-sizing: border-box;
+        }
     </style>
 </head>
-<body class="text-white select-none italic font-bold text-center p-2">
+<body class="text-white select-none italic font-bold text-center">
     
     <div id="lock" class="fixed inset-0 bg-black flex flex-col items-center justify-center z-50 p-4">
         <h1 class="text-red-600 text-2xl font-black uppercase italic mb-4">CHARROS</h1>
@@ -29,7 +42,7 @@
         </div>
     </div>
 
-    <div id="panel" class="hidden grid-layout max-w-md mx-auto w-full">
+    <div id="panel" class="hidden grid-layout">
         
         <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-1">
             <div id="r-disp" class="text-4xl tabular text-red-600 font-black leading-none">00:00</div>
@@ -38,40 +51,39 @@
 
         <button onclick="m('CLOCK')" class="w-full bg-red-900/20 py-3 rounded-xl text-sm border border-red-700 uppercase">Mostrar Hora Real</button>
 
-        <div class="grid grid-cols-4 gap-2">
+        <div class="grid grid-cols-4 gap-1">
             <button onclick="run(0)" class="bg-zinc-900 py-3 rounded-lg border border-zinc-700 text-sm">0:00</button>
             <button onclick="run(20)" class="bg-zinc-900 py-3 rounded-lg border border-zinc-700 text-sm">0:20</button>
             <button onclick="run(30)" class="bg-zinc-900 py-3 rounded-lg border border-zinc-700 text-sm">0:30</button>
             <button onclick="run(120)" class="bg-zinc-900 py-3 rounded-lg border border-zinc-700 text-sm">2:00</button>
         </div>
 
-        <div class="flex gap-2 h-10">
+        <div class="flex gap-1 h-10">
             <input type="number" id="im" placeholder="MIN" class="flex-1 bg-zinc-800 text-white rounded-lg text-center font-bold text-sm border border-zinc-700 outline-none">
             <input type="number" id="is" placeholder="SEG" class="flex-1 bg-zinc-800 text-white rounded-lg text-center font-bold text-sm border border-zinc-700 outline-none">
-            <button onclick="man()" class="bg-zinc-600 px-4 rounded-lg text-[9px] uppercase font-sans">Cargar</button>
+            <button onclick="man()" class="bg-zinc-600 px-2 rounded-lg text-[9px] uppercase font-sans">Cargar</button>
         </div>
 
         <div></div>
 
-        <div class="flex flex-col gap-2 pb-2">
-            <button onclick="start()" class="w-full bg-green-700 py-6 rounded-2xl text-4xl shadow-lg border-b-4 border-green-900 active:border-b-0 uppercase">Start</button>
-            <div class="flex gap-2 h-14">
-                <button onclick="pause()" class="flex-1 bg-red-900 rounded-xl text-sm font-sans uppercase border-b-4 border-red-950 active:border-b-0">Pause</button>
-                <button onclick="reset()" class="flex-1 bg-zinc-700 rounded-xl text-sm font-sans uppercase border-b-4 border-zinc-800 active:border-b-0">Reset</button>
+        <div class="flex flex-col gap-1">
+            <button onclick="start()" class="w-full bg-green-700 py-5 rounded-xl text-4xl shadow-lg border-b-4 border-green-900 active:border-0 uppercase">Start</button>
+            <div class="flex gap-1 h-12">
+                <button onclick="pause()" class="flex-1 bg-red-900 rounded-lg text-sm font-sans uppercase border-b-4 border-red-950 active:border-0">Pause</button>
+                <button onclick="reset()" class="flex-1 bg-zinc-700 rounded-lg text-sm font-sans uppercase border-b-4 border-zinc-800 active:border-0">Reset</button>
             </div>
         </div>
         
     </div>
 
     <script>
+        // ... (El script de Supabase se mantiene igual)
         const HASH = "MTkyNQ=="; 
         const _s = supabase.createClient("https://shtwudjhrrciwbvygphz.supabase.co", "sb_publishable_mDbvgneSToYLbcHXUgCXFw_sXk3S-Um");
         let cp = "", ls = 20, t = null;
-
         function a(n) { if(cp.length<4) {cp += n; document.getElementById('p-disp').value = cp;} }
         function c() { cp = ""; document.getElementById('p-disp').value = ""; }
         function v() { if(btoa(cp) === HASH) { document.getElementById('lock').classList.add('hidden'); document.getElementById('panel').classList.remove('hidden'); init(); } else { alert("DENEGADO"); c(); } }
-
         function u(d) {
             clearInterval(t);
             const disp = document.getElementById('r-disp'), txt = document.getElementById('st-txt'), bar = document.getElementById('st-bar');
@@ -90,7 +102,6 @@
                 disp.innerText = `${String(Math.floor(d.seconds/60)).padStart(2,'0')}:${String(d.seconds%60).padStart(2,'0')}`;
             }
         }
-
         async function m(st) { await _s.from('RELOJ').update({status: st}).eq('id', 1); }
         async function run(s) { ls = s; const e = new Date(); e.setSeconds(e.getSeconds() + s); await _s.from('RELOJ').update({status:'RUNNING', seconds:s, end_at:e.toISOString()}).eq('id', 1); }
         async function man() { const s = (parseInt(document.getElementById('im').value)||0)*60 + (parseInt(document.getElementById('is').value)||0); ls = s; await _s.from('RELOJ').update({status:'PAUSED', seconds:s}).eq('id', 1); }
