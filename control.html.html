@@ -3,128 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CONTROL - CHARROS</title>
+    <title>SECURE CONTROL - CHARROS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
         .tabular { font-variant-numeric: tabular-nums; }
+        .key-btn { background: #18181b; height: 75px; border-radius: 1.2rem; border: 1px solid #3f3f46; font-size: 1.8rem; }
+        .key-btn:active { background: #dc2626; transform: scale(0.92); }
     </style>
 </head>
 <body class="bg-black text-white p-4 select-none italic font-bold text-center">
-    <div class="max-w-md mx-auto">
-        
-        <div class="bg-zinc-900 border-2 border-zinc-700 rounded-3xl p-6 mb-4 shadow-2xl">
-            <div id="remote-display" class="text-6xl tabular text-red-600 font-black mb-1">00:00</div>
-            <div id="status-bar" class="py-1 rounded-full text-[10px] border border-zinc-700 bg-black uppercase tracking-widest">
-                ESTADO: <span id="status-text">CONECTANDO...</span>
-            </div>
+    
+    <div id="lock" class="fixed inset-0 bg-black flex flex-col items-center justify-center z-50 p-6">
+        <h1 class="text-red-600 text-4xl font-black mb-10 italic">CHARROS</h1>
+        <input type="password" id="p-disp" readonly placeholder="••••" class="bg-transparent text-center text-6xl mb-12 outline-none text-red-600 tabular tracking-[0.5em] w-full">
+        <div class="grid grid-cols-3 gap-4 w-full max-w-[320px]">
+            <button onclick="a('1')" class="key-btn">1</button><button onclick="a('2')" class="key-btn">2</button><button onclick="a('3')" class="key-btn">3</button>
+            <button onclick="a('4')" class="key-btn">4</button><button onclick="a('5')" class="key-btn">5</button><button onclick="a('6')" class="key-btn">6</button>
+            <button onclick="a('7')" class="key-btn">7</button><button onclick="a('8')" class="key-btn">8</button><button onclick="a('9')" class="key-btn">9</button>
+            <button onclick="c()" class="key-btn text-xs text-zinc-500">CLR</button><button onclick="a('0')" class="key-btn">0</button>
+            <button onclick="v()" class="key-btn bg-green-900/40 border-green-600 text-sm">ENT</button>
+        </div>
+    </div>
+
+    <div id="panel" class="max-w-md mx-auto hidden pt-4">
+        <div class="bg-zinc-900 border-2 border-zinc-700 rounded-[2.5rem] p-6 mb-6">
+            <div id="r-disp" class="text-7xl tabular text-red-600 font-black mb-2">00:00</div>
+            <div id="st-bar" class="py-1 rounded-full text-[10px] border border-zinc-800 bg-black uppercase tracking-widest">ESTADO: <span id="st-txt">SYNC</span></div>
         </div>
 
-        <button onclick="setRealTimeMode()" class="w-full bg-red-900/20 py-4 rounded-2xl text-xl mb-4 border border-red-600 active:bg-red-600 transition-colors">
-            MOSTRAR HORA REAL
-        </button>
+        <button onclick="m('CLOCK')" class="w-full bg-red-900/10 py-5 rounded-2xl text-xl mb-6 border border-red-900 active:bg-red-600">MOSTRAR HORA REAL</button>
 
-        <div class="grid grid-cols-2 gap-3 mb-4 text-2xl">
-            <button onclick="quickStart(0)" class="bg-zinc-900 h-16 rounded-xl border border-zinc-700 active:bg-red-600">0:00</button>
-            <button onclick="quickStart(20)" class="bg-zinc-900 h-16 rounded-xl border border-zinc-700 active:bg-red-600">0:20</button>
-            <button onclick="quickStart(30)" class="bg-zinc-900 h-16 rounded-xl border border-zinc-700 active:bg-red-600">0:30</button>
-            <button onclick="quickStart(120)" class="bg-zinc-900 h-16 rounded-xl border border-zinc-700 active:bg-red-600">2:00</button>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <button onclick="run(0)" class="bg-zinc-900 h-16 rounded-xl border border-zinc-800 text-2xl active:bg-red-600">0:00</button>
+            <button onclick="run(20)" class="bg-zinc-900 h-16 rounded-xl border border-zinc-800 text-2xl active:bg-red-600">0:20</button>
+            <button onclick="run(30)" class="bg-zinc-900 h-16 rounded-xl border border-zinc-800 text-2xl active:bg-red-600">0:30</button>
+            <button onclick="run(120)" class="bg-zinc-900 h-16 rounded-xl border border-zinc-800 text-2xl active:bg-red-600">2:00</button>
         </div>
 
-        <div class="bg-zinc-900 p-4 rounded-3xl mb-4 border border-zinc-800">
-            <div class="flex gap-2 mb-3 text-black font-sans">
-                <input type="number" id="min" placeholder="MIN" class="w-full bg-white p-3 rounded-xl text-center text-xl font-bold">
-                <input type="number" id="seg" placeholder="SEG" class="w-full bg-white p-3 rounded-xl text-center text-xl font-bold">
-            </div>
-            <button onclick="manualSet()" class="w-full bg-zinc-700 py-2 rounded-xl text-xs uppercase text-white">Cargar Manual</button>
+        <div class="bg-zinc-900 p-4 rounded-3xl mb-6 border border-zinc-800 flex gap-2">
+            <input type="number" id="im" placeholder="MIN" class="w-1/2 bg-white text-black p-3 rounded-xl text-center font-bold">
+            <input type="number" id="is" placeholder="SEG" class="w-1/2 bg-white text-black p-3 rounded-xl text-center font-bold">
+            <button onclick="man()" class="bg-zinc-700 px-4 rounded-xl text-[10px] text-white">CARGAR</button>
         </div>
 
-        <div class="flex flex-col gap-3">
-            <button onclick="triggerStart()" class="w-full bg-green-700 py-8 rounded-3xl text-4xl active:bg-green-600 shadow-lg shadow-green-900/20">START</button>
-            <div class="flex gap-3">
-                <button onclick="triggerPause()" class="flex-1 bg-red-800 py-6 rounded-2xl text-xl">PAUSE</button>
-                <button onclick="triggerReset()" class="flex-1 bg-zinc-600 py-6 rounded-2xl text-xl">RESET</button>
+        <div class="flex flex-col gap-4">
+            <button onclick="start()" class="w-full bg-green-700 py-8 rounded-[2rem] text-4xl active:bg-green-600">START</button>
+            <div class="flex gap-4">
+                <button onclick="pause()" class="flex-1 bg-red-800 py-6 rounded-2xl text-xl">PAUSE</button>
+                <button onclick="reset()" class="flex-1 bg-zinc-600 py-6 rounded-2xl text-xl">RESET</button>
             </div>
         </div>
     </div>
 
     <script>
-        const _supabase = supabase.createClient("https://shtwudjhrrciwbvygphz.supabase.co", "sb_publishable_mDbvgneSToYLbcHXUgCXFw_sXk3S-Um");
-        let lastSetSeconds = 20;
-        let localInterval = null;
+        const HASH = "MTkyNQ=="; // PIN 1925
+        const _s = supabase.createClient("https://shtwudjhrrciwbvygphz.supabase.co", "sb_publishable_mDbvgneSToYLbcHXUgCXFw_sXk3S-Um");
+        let cp = "", ls = 20, t = null;
 
-        function updateUI(data) {
-            clearInterval(localInterval);
-            const bar = document.getElementById('status-bar');
-            const text = document.getElementById('status-text');
-            const display = document.getElementById('remote-display');
-            
-            const status = data.status;
-            text.innerText = status;
+        function a(n) { if(cp.length<4) {cp += n; document.getElementById('p-disp').value = cp;} }
+        function c() { cp = ""; document.getElementById('p-disp').value = ""; }
+        function v() { if(btoa(cp) === HASH) { document.getElementById('lock').style.display='none'; document.getElementById('panel').classList.remove('hidden'); init(); } else { alert("DENEGADO"); c(); } }
 
-            if (status === 'CLOCK') {
-                bar.className = "py-1 rounded-full text-[10px] border border-red-500 bg-red-950/30 text-red-400 uppercase tracking-widest";
-                localInterval = setInterval(() => {
-                    const now = new Date();
-                    display.innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-                }, 1000);
-            } else if (status === 'RUNNING') {
-                bar.className = "py-1 rounded-full text-[10px] border border-green-500 bg-green-950/30 text-green-400 uppercase tracking-widest";
-                localInterval = setInterval(() => {
-                    const diff = Math.max(0, Math.ceil((new Date(data.end_at).getTime() - new Date().getTime()) / 1000));
-                    const m = Math.floor(diff / 60);
-                    const s = diff % 60;
-                    display.innerText = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        function u(d) {
+            clearInterval(t);
+            const disp = document.getElementById('r-disp'), txt = document.getElementById('st-txt'), bar = document.getElementById('st-bar');
+            txt.innerText = d.status;
+            if(d.status === 'CLOCK') {
+                bar.className = "py-1 rounded-full text-[10px] border border-red-500 bg-red-950/20 text-red-500";
+                t = setInterval(() => { const n = new Date(); disp.innerText = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`; }, 1000);
+            } else if(d.status === 'RUNNING') {
+                bar.className = "py-1 rounded-full text-[10px] border border-green-500 bg-green-950/20 text-green-500";
+                t = setInterval(() => {
+                    const diff = Math.max(0, Math.ceil((new Date(d.end_at) - new Date()) / 1000));
+                    disp.innerText = `${String(Math.floor(diff/60)).padStart(2,'0')}:${String(diff%60).padStart(2,'0')}`;
                 }, 200);
             } else {
-                bar.className = "py-1 rounded-full text-[10px] border border-red-500 bg-red-950/30 text-red-400 uppercase tracking-widest";
-                const m = Math.floor(data.seconds / 60);
-                const s = data.seconds % 60;
-                display.innerText = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                bar.className = "py-1 rounded-full text-[10px] border border-red-500 bg-red-950/20 text-red-500";
+                disp.innerText = `${String(Math.floor(d.seconds/60)).padStart(2,'0')}:${String(d.seconds%60).padStart(2,'0')}`;
             }
         }
 
-        async function setRealTimeMode() { await _supabase.from('RELOJ').update({ status: 'CLOCK' }).eq('id', 1); }
-        
-        async function quickStart(sec) {
-            lastSetSeconds = sec;
-            const end = new Date();
-            end.setSeconds(end.getSeconds() + sec);
-            await _supabase.from('RELOJ').update({ status: 'RUNNING', seconds: sec, end_at: end.toISOString() }).eq('id', 1);
-        }
-
-        async function manualSet() {
-            const m = parseInt(document.getElementById('min').value) || 0;
-            const s = parseInt(document.getElementById('seg').value) || 0;
-            lastSetSeconds = (m * 60) + s;
-            await _supabase.from('RELOJ').update({ status: 'PAUSED', seconds: lastSetSeconds }).eq('id', 1);
-        }
-
-        async function triggerStart() {
-            const end = new Date();
-            end.setSeconds(end.getSeconds() + lastSetSeconds);
-            await _supabase.from('RELOJ').update({ status: 'RUNNING', end_at: end.toISOString() }).eq('id', 1);
-        }
-
-        async function triggerPause() {
-            const { data } = await _supabase.from('RELOJ').select('*').eq('id', 1).single();
-            if (data && data.status === 'RUNNING') {
-                const diff = Math.max(0, Math.ceil((new Date(data.end_at).getTime() - new Date().getTime()) / 1000));
-                lastSetSeconds = diff;
-                await _supabase.from('RELOJ').update({ status: 'PAUSED', seconds: diff }).eq('id', 1);
+        async function m(st) { await _s.from('RELOJ').update({status: st}).eq('id', 1); }
+        async function run(s) { ls = s; const e = new Date(); e.setSeconds(e.getSeconds() + s); await _s.from('RELOJ').update({status:'RUNNING', seconds:s, end_at:e.toISOString()}).eq('id', 1); }
+        async function man() { const s = (parseInt(document.getElementById('im').value)||0)*60 + (parseInt(document.getElementById('is').value)||0); ls = s; await _s.from('RELOJ').update({status:'PAUSED', seconds:s}).eq('id', 1); }
+        async function start() { const e = new Date(); e.setSeconds(e.getSeconds() + ls); await _s.from('RELOJ').update({status:'RUNNING', end_at:e.toISOString()}).eq('id', 1); }
+        async function pause() {
+            const {data} = await _s.from('RELOJ').select('*').eq('id', 1).single();
+            if(data?.status === 'RUNNING') {
+                const diff = Math.max(0, Math.ceil((new Date(data.end_at) - new Date()) / 1000));
+                ls = diff; await _s.from('RELOJ').update({status:'PAUSED', seconds:diff}).eq('id', 1);
             }
         }
-
-        async function triggerReset() { quickStart(lastSetSeconds); }
-
-        _supabase.channel('reloj-ui').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'RELOJ' }, p => updateUI(p.new)).subscribe();
-        
-        // Sincronización inicial
-        async function init() {
-            const { data } = await _supabase.from('RELOJ').select('*').eq('id', 1).single();
-            if (data) updateUI(data);
-        }
-        init();
+        async function reset() { run(ls); }
+        async function init() { const {data} = await _s.from('RELOJ').select('*').eq('id', 1).single(); if(data) u(data); }
+        _s.channel('ui').on('postgres_changes', {event:'UPDATE', schema:'public', table:'RELOJ'}, p => u(p.new)).subscribe();
     </script>
 </body>
 </html>
