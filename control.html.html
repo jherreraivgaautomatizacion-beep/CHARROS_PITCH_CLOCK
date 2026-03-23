@@ -3,97 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SECURE CONTROL - CHARROS</title>
+    <title>CONTROL - CHARROS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
         .tabular { font-variant-numeric: tabular-nums; }
         .key-btn { background: #18181b; height: 50px; border-radius: 1rem; border: 1px solid #3f3f46; font-size: 1.4rem; }
-        .key-btn:active { background: #dc2626; transform: scale(0.95); }
         .hidden { display: none !important; }
         body { touch-action: manipulation; height: 100dvh; overflow: hidden; }
-        @keyframes subtlePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
-        .logo-lmb-pulse { animation: subtlePulse 3s infinite ease-in-out; }
+        button:active { transform: scale(0.96); filter: brightness(1.2); }
     </style>
 </head>
-<body class="bg-black text-white p-2 select-none italic font-bold text-center overflow-hidden h-screen flex flex-col">
+<body class="bg-black text-white p-2 select-none italic font-bold text-center h-screen flex flex-col">
     
     <div id="lock" class="fixed inset-0 bg-black flex flex-col items-center justify-center z-50 p-4">
-        <div class="mb-6 text-center logo-lmb-pulse">
-            <svg class="h-28 w-auto mx-auto" viewBox="0 0 1013 771" xmlns="http://www.w3.org/2000/svg">
-                <path d="M722.9 83.1C640.7 83.1 573.9 119.3 522.6 191.7C501.9 157.1 475.2 128.5 442.5 106.1C418.1 89.3 391 76.5 361.3 67.5C317.9 54.3 273.4 49 228.6 51.6C163.6 55.3 102.1 79.5 53.3 121.2C22.6 147.4 0 180.7 0 220.1C0 236.4 4.5 251.4 12.9 264.8C16.8 271 21.6 276.7 27.2 281.8C35.9 289.8 46.1 296 57.5 300C72.6 305.3 88.8 306.9 104.9 304.9L308.2 281.2C278.4 330 252.1 381.1 229.4 434.6C197.6 509.8 171.8 586.3 151.9 663.9L170 666.1C210.8 512.9 270.3 365.2 348.6 226.7C395.7 143.1 454.1 123.6 488 162.2C500 176.1 506.7 191.9 508.3 209.6C510.6 235.3 502.9 259.9 485.4 283.4L372.2 433.8C346.5 467.8 328.7 506.7 318.7 549.4C308.8 592.1 308.6 637.3 318.1 681.4C322.8 703.1 331.1 723.7 342.9 742.7C356 763.4 374 771.3 393.1 771.3C402.2 771.3 411.3 769.7 420.2 766.4C447.8 756.2 468.9 735.6 483.7 704.7L600.2 461.6C604.5 452.7 609.5 444.1 615.1 435.9L616.7 433.5C642.1 396.6 667.6 373.1 693.3 362.8L696.1 361.6C731.3 346.2 772.3 339 818.8 340.3C855.9 341.3 892.4 346.7 928 356.7C959.3 365.5 984.7 377.6 1004.1 393.1C1008.2 396.4 1010.5 401.4 1010.5 406.8C1010.5 413 1007.4 418.8 1002.3 422.3L890.7 499.7C887.8 501.7 884.2 502.8 880.6 502.8C876.5 502.8 872.4 501.5 872.4 501.5C872.4 501.5 872.4 501.5 872.4 501.4V501.4C872.4 447.3 916.4 403.4 970.5 403.4C993.6 403.4 1014.8 411.3 1031.4 424.6C1037.3 429.4 1038.2 437.9 1033.4 443.7C1028.6 449.6 1020.1 450.4 1014.3 445.6C1002.2 435.9 986.8 430.2 970.4 430.2C931.2 430.2 899.2 462.2 899.2 501.4V501.4C899.2 503.5 899.3 505.6 899.5 507.6C894.9 509.2 890.3 510.8 885.7 512.4C885.7 512.4 885.7 512.4 885.7 512.3V512.3C885.7 458.2 929.7 414.3 983.8 414.3C1006.9 414.3 1028.1 422.2 1044.7 435.5C1050.6 440.3 1051.5 448.8 1046.7 454.6C1041.9 460.5 1033.4 461.3 1027.6 456.5C1015.5 446.8 1000.1 441.1 983.7 441.1C944.5 441.1 912.5 473.1 912.5 512.3V512.3C912.5 514.4 912.6 516.5 912.8 518.5L875 531.8C875 531.8 875 531.8 875 531.7V531.7C875 477.6 919 433.7 973.1 433.7C996.2 433.7 1017.4 441.6 1034 454.9C1039.9 459.7 1040.8 468.2 1036 474C1031.2 479.9 1022.7 480.7 1016.9 475.9C1004.8 466.2 989.4 460.5 973 460.5C933.8 460.5 901.8 492.5 901.8 531.7V531.7C901.8 533.8 901.9 535.9 902.1 537.9L864.3 551.2C864.3 551.2 864.3 551.2 864.3 551.1V551.1C864.3 497 908.3 453.1 962.4 453.1C985.5 453.1 1006.7 461 1023.3 474.3C1029.2 479.1 1030.1 487.6 1025.3 493.4C1020.5 499.3 1012 500.1 1006.2 495.3C994.1 485.6 978.7 479.9 962.3 479.9C923.1 479.9 891.1 511.9 891.1 551.1V551.1C891.1 553.2 891.2 555.3 891.4 557.3L853.6 570.6C853.6 570.6 853.6 570.6 853.6 570.5V570.5C853.6 516.4 897.6 472.5 951.7 472.5C974.8 472.5 996 480.4 1012.6 493.7C1018.5 498.5 1019.4 507 1014.6 512.8C1009.8 518.7 1001.3 519.5 995.5 514.7C983.4 505 968 499.3 951.6 499.3C912.4 499.3 880.4 531.3 880.4 570.5V570.5C880.4 572.6 880.5 574.7 880.7 576.7L842.9 590C842.9 590 842.9 590 842.9 589.9V589.9C842.9 535.8 886.9 491.9 941 491.9C964.1 491.9 985.3 499.8 1001.9 513.1C1007.8 517.9 1008.7 526.4 1013.9 532.2C1009.1 538.1 1000.6 538.9 994.8 534.1C982.7 524.4 967.3 518.7 950.9 518.7C911.7 518.7 879.7 550.7 879.7 589.9V589.9C879.7 592 879.8 594.1 880 596.1L842.2 609.4C842.2 609.4 842.2 609.4 842.2 609.3V609.3C842.2 555.2 886.2 511.3 940.3 511.3C963.4 511.3 984.6 519.2 1001.2 532.5C1007.1 537.3 1008 545.8 1003.2 551.6C998.4 557.5 989.9 558.3 984.1 553.5C972 543.8 956.6 538.1 940.2 538.1C901 538.1 869 570.1 869 609.3V609.3C869 611.4 869.1 613.5 869.3 615.5C864.7 617.1 860.1 618.7 855.5 620.3C855.5 620.3 855.5 620.3 855.5 620.2V620.2C855.5 566.1 899.5 522.2 953.6 522.2C976.7 522.2 997.9 530.1 1014.5 543.4C1020.4 548.2 1021.3 556.7 1016.5 562.5C1011.7 568.4 1003.2 569.2 997.4 564.4C985.3 554.7 969.9 549 953.5 549C914.3 549 882.3 581 882.3 620.2V620.2C882.3 622.3 882.4 624.4 882.6 626.4L844.8 639.7C844.8 639.7 844.8 639.7 844.8 639.6V639.6C844.8 585.5 888.8 541.6 942.9 541.6C966 541.6 987.2 549.5 1003.8 562.8C1009.7 567.6 1010.6 576.1 1005.8 581.9C1001 587.8 992.5 588.6 986.7 583.8C974.6 574.1 959.2 568.4 942.8 568.4C903.6 568.4 871.6 600.4 871.6 639.6V639.6C871.6 641.7 871.7 643.8 871.9 645.8L834.1 659.1C834.1 659.1 834.1 659.1 834.1 659V659C834.1 604.9 878.1 561 932.2 561C955.3 561 976.5 568.9 993.1 582.2C999 587 999.9 595.5 995.1 601.3C990.3 607.2 981.8 608 976 603.2C963.9 593.5 948.5 587.8 932.1 587.8C892.9 587.8 860.9 619.8 860.9 659V659C860.9 661.1 861 663.2 861.2 665.2C856.6 666.8 852 668.4 847.4 670C847.4 670 847.4 670 847.4 669.9V669.9C847.4 615.8 891.4 571.9 945.5 571.9C968.6 571.9 989.8 579.8 1006.4 593.1C1012.3 597.9 1013.2 606.4 1008.4 612.2C1003.6 618.1 995.1 618.9 989.3 614.1C977.2 604.4 961.8 598.7 945.4 598.7C906.6 598.7 874.6 630.7 874.6 669.9V669.9C874.6 672 874.7 674.1 874.9 676.1C870.3 677.7 865.7 679.3 861.1 680.9C861.1 680.9 861.1 680.9 861.1 680.8V680.8C861.1 626.7 905.1 582.8 959.2 582.8C982.3 582.8 1003.5 590.7 1020.1 604C1026 608.8 1026.9 617.3 1022.1 623.1C1017.3 629 1008.8 629.8 1003 625C990.9 615.3 975.5 609.6 959.1 609.6C919.9 609.6 887.9 641.6 887.9 680.8V680.8C887.9 682.9 888 685 888.2 687C883.6 688.6 879 690.2 874.4 691.8C874.4 691.8 874.4 691.8 874.4 691.7V691.7C874.4 637.6 918.4 593.7 972.5 593.7C995.6 593.7 1016.8 601.6 1033.4 614.9C1039.3 619.7 1040.2 628.2 1035.4 634C1030.6 639.9 1022.1 640.7 1016.3 635.9C1004.2 626.2 988.8 620.5 972.4 620.5C933.2 620.5 901.2 652.5 901.2 691.7V691.7C901.2 693.8 901.3 695.9 901.5 697.9C896.9 699.5 892.3 701.1 887.7 702.7C887.7 702.7 887.7 702.7 887.7 702.6V702.6C887.7 648.5 931.7 604.6 985.8 604.6C1008.9 604.6 1030.1 612.5 1046.7 625.8C1052.6 630.6 1053.5 639.1 1048.7 644.9C1043.9 650.8 1035.4 651.6 1029.6 646.8C1017.5 637.1 1002.1 631.4 985.7 631.4C946.5 631.4 914.5 663.4 914.5 702.6V702.6C914.5 704.7 914.6 706.8 914.8 708.8C910.2 710.4 905.6 712 901 713.6C901 713.6 901 713.6 901 713.5V713.5C901 659.4 945 615.5 999.1 615.5C1022.2 615.5 1043.4 623.4 1060 636.7C1065.9 641.5 1066.8 650 1062 655.8C1057.2 661.7 1048.7 662.5 1042.9 657.7C1030.8 648 1015.4 642.3 999 642.3C959.8 642.3 927.8 674.3 927.8 713.5V713.5C927.8 715.6 927.9 717.7 928.1 719.7C923.5 721.3 918.9 722.9 914.3 724.5C914.3 724.5 914.3 724.5 914.3 724.4V724.4C914.3 670.3 958.3 626.4 1012.4 626.4C1035.5 626.4 1056.7 634.3 1073.3 647.6C1079.2 652.4 1080.1 660.9 1075.3 666.7C1070.5 672.6 1062 673.4 1056.2 668.6C1044.1 658.9 1028.7 653.2 1012.3 653.2C973.1 653.2 941.1 685.2 941.1 724.4V724.4C941.1 726.5 941.2 728.6 941.4 730.6C931.3 734.2 921.1 737.8 911 741.3L903.6 512.9Z" fill="#DC2626"/>
-                <path d="M470.5 305.2C465.6 303.7 462.9 298.4 464.4 293.5C465.9 288.6 471.2 285.9 476.1 287.4L883.3 412.1C885.5 412.8 887 414.8 887 417.1C887 419.4 885.5 421.4 883.3 422.1C843.4 434.3 804.1 446.3 765.1 458.3C762 459.3 759 460.2 756 461.1C739.4 466.3 722.9 471.5 706.5 476.6L706.1 476.7C699.7 478.7 693.3 480.7 687 482.7L685.5 483.1C679.7 485 673.8 486.8 668 488.7L667.5 488.9C655.8 492.6 644.2 496.4 632.6 500.1L632.4 500.2C625.1 502.6 617.8 504.9 610.5 507.2C606.1 508.6 601.8 510 597.5 511.4C593 513.1 588.6 514.8 584.2 516.6L583.8 516.7C577.2 519.3 570.6 521.9 564.1 524.5L563.6 524.7C561.7 525.5 559.7 526.3 557.8 527.1L554 533.3L497.2 625.6C495.8 627.9 493.3 629.3 490.6 629.3C487.9 629.3 485.4 627.9 484 625.6L482 622.3C481.1 621 481.1 619.1 482 617.7L538.4 526.1C517 520.3 494.9 517.3 472.2 517.3C454.1 517.3 436.3 519.1 418.7 522.6C368 532.8 325.3 558.7 290.8 600.5C288.5 603.3 284.4 603.7 281.6 601.4C278.8 599.1 278.4 595 280.7 592.2C316.6 548.8 361 521.8 413.8 511.2L416.7 510.6C435 507.1 453.6 505.3 472.4 505.3C496.2 505.3 519.6 508.5 542.4 514.6L547.8 505.8C562.9 481.2 578.4 457.1 594.4 433.5L528.9 433.5C523.5 433.5 519.1 429.1 519.1 423.7C519.1 418.3 523.5 413.9 528.9 413.9C530.2 413.9 531.5 413.9 532.8 413.9C571.4 353.1 610 302.7 648.8 262.7L650.7 260.7C681 229.4 708.3 204.6 732.7 186.3L732.5 186.1C729.6 183.3 726.8 180.7 723.9 178C718 172.5 712.1 166.9 706.1 161.4C704 159.5 702 157.6 699.9 155.6C699.6 155.2 699.2 154.9 698.8 154.6C670.3 129.2 638.1 110 602.4 96.8C576.2 87.1 549.3 82.2 522.6 82.2C497.1 82.2 471.5 86.8 447.2 95.8C422 105.1 398 118.4 375.4 135.8C331.6 169.5 290.5 214.3 252.3 270.2L247.9 276.7C179 378.1 130 488.4 100.8 604.2L81.3 601.8C98.7 532.7 121.7 465.1 150.3 399.7C166 363.6 184 328.6 204.4 294.6L104.9 306.2C88.9 308.2 72.3 306.6 57 301.2C45.4 297.1 35.1 290.9 26.2 282.8C20.8 277.8 16 272.2 12 265.8C4.2 253.2 0 239.1 0 223.7C0 183.2 22.2 149.3 53.3 122.9C102.8 80.8 164.1 56.5 228.6 52.9C273.7 50.4 318.5 55.8 361.3 68.8C391.2 77.9 418.9 91.1 447.2 108.5C476.5 130.6 502.6 158.4 522.6 191.7C549 171.1 577.8 160.7 608.2 160.7C609.6 160.7 610.9 160.7 612.2 160.7C635.8 111.4 665.4 70.1 700.8 36.8C705.8 32.1 713.4 32.3 718.1 37.1C724.8 44 731.4 413.9 737.8 83.1C720.9 105.1 705.8 131.6 692.6 162.7C719.8 143.1 750 127.5 783 116.1C790.2 113.6 798 116.6 800.5 123.8C803 131 800 138.8 782.8 141.3C762.6 151.7 735.2 165.9 710.6 183.8C729.1 179.6 747.5 176.1 765.9 173.5C815.1 166.4 858 163.4 894.6 164.5C936.1 165.7 968.1 172.3 990.5 184.2C1007.6 193.3 1018.1 210.8 1018.1 230L1018.1 321.6C1018.1 325 1016.1 328.1 1013 329.5C1009.9 331 1006 330.8 1002.8 329L967 309.3C963 307 960.5 303 960.5 298.5C960.5 294 963 290 967 287.8C991 274.6 1003 260.6 1003 245.8C1003 238.9 1000 232.9 993.8 227.8C987 222.1 978 217.6 967 214.3C947.6 208.5 924.3 207.1 897 210C839.9 216 787.7 232.4 740.5 258.9C693.3 285.4 652 321.4 616.7 366.7C609.9 375.4 603.2 384.4 596.8 393.8C638.1 366.4 680.1 348.8 722.9 341.1C778.6 331 831.6 330.9 881.5 340.8C930.1 350.5 969.3 365.8 999 386.7C1002.1 388.9 1003.9 392.4 1003.9 396.1C1003.9 399.3 1002.6 402.3 1000.3 404.3L967.2 432.7C963.9 435.5 959.8 437 955.5 437C950.5 437 945.7 435 942.2 431.5L938.8 428.1C931.3 420.7 912.8 414.3 883.2 408.8C847.6 402.1 812.8 400.8 779 404.7C740 409.2 704 421.1 671.2 440.3L662.9 445.1C614.9 473.1 579.5 521 556.7 589L537.5 646.2C583.7 632.7 634.2 626.7 689.1 628.4L700 628.7C806 631.9 907.8 656.3 1001.9 701.9C1008.7 705.2 1013 712 1013 719.6L1013 751.8C1013 762.6 1004.2 771.3 993.4 771.3L564.1 771.3C564.1 771.3 564 771.3 564 771.3L543.1 771.3C542.5 771.3 541.9 771.3 541.3 771C538.5 769.3 536 767.2 533.8 764.7C511.9 739.3 501 704.9 501 661.7C501 625.6 506.7 595.3 517.9 571C529.2 546.6 545.9 528.2 567.9 515.8L577.8 510.3C615.4 489.2 650.3 475.4 682.4 468.9C705.5 464.2 729.8 462.4 755.2 463.6C801 465.7 839 477.5 869 499.1C872.4 501.5 876.5 502.8 880.6 502.8C884.2 502.8 887.8 501.7 890.7 499.7L1002.3 422.3C1007.4 418.8 1010.5 413 1010.5 406.8C1010.5 401.4 1008.2 396.4 1004.1 393.1C984.7 377.6 959.3 365.5 928 356.7C892.4 346.7 855.9 341.3 818.8 340.3C772.3 339 731.3 346.2 696.1 361.6L693.3 362.8C667.6 373.1 642.1 396.6 616.7 433.5L615.1 435.9C609.5 444.1 604.5 452.7 600.2 461.6L483.7 704.7C468.9 735.6 447.8 756.2 420.2 766.4C411.3 769.7 402.2 771.3 393.1 771.3C374 771.3 356 763.4 342.9 742.7C331.1 723.7 322.8 703.1 318.1 681.4C308.6 637.3 308.8 592.1 318.7 549.4C328.7 506.7 346.5 467.8 372.2 433.8L485.4 283.4C502.9 259.9 510.6 235.3 508.3 209.6C506.7 191.9 500 176.1 488 162.2C454.1 123.6 395.7 143.1 348.6 226.7C270.3 365.2 210.8 512.9 170 666.1L151.9 663.9C171.8 586.3 197.6 509.8 229.4 434.6C252.1 381.1 278.4 330 308.2 281.2L104.9 304.9C88.8 306.9 72.6 305.3 57.5 300C46.1 296 35.9 289.8 27.2 281.8C21.6 276.7 16.8 271 12.9 264.8C4.5 251.4 0 236.4 0 220.1C0 180.7 22.6 147.4 53.3 121.2C102.8 80.8 164.1 56.5 228.6 52.9C273.7 50.4 318.5 55.8 361.3 68.8C391.2 77.9 418.9 91.1 447.2 108.5C476.5 130.6 502.6 158.4 522.6 191.7C573.9 119.3 640.7 83.1 722.9 83.1Z" fill="#DC2626"/>
-            </svg>
-            <p class="text-zinc-500 text-[11px] tracking-[0.4em] mt-3 uppercase font-sans">LMP - Operaciones Estadio</p>
+        <div class="mb-8">
+            <h1 class="text-red-600 text-2xl font-black uppercase italic tracking-tighter">CHARROS</h1>
+            <p class="text-white text-[10px] tracking-[0.3em] font-sans mt-2">LIGA MEXICANA DE BEISBOL</p>
         </div>
-        <input type="password" id="p-disp" readonly placeholder="••••" class="bg-transparent text-center text-6xl mb-12 outline-none text-red-600 tabular tracking-[0.5em] w-full">
-        <div class="grid grid-cols-3 gap-4 w-full max-w-[320px]">
+        <input type="password" id="p-disp" readonly placeholder="••••" class="bg-transparent text-center text-5xl mb-8 outline-none text-red-600 tabular tracking-[0.4em] w-full">
+        <div class="grid grid-cols-3 gap-3 w-full max-w-[280px]">
             <button onclick="a('1')" class="key-btn">1</button><button onclick="a('2')" class="key-btn">2</button><button onclick="a('3')" class="key-btn">3</button>
             <button onclick="a('4')" class="key-btn">4</button><button onclick="a('5')" class="key-btn">5</button><button onclick="a('6')" class="key-btn">6</button>
             <button onclick="a('7')" class="key-btn">7</button><button onclick="a('8')" class="key-btn">8</button><button onclick="a('9')" class="key-btn">9</button>
-            <button onclick="c()" class="key-btn text-xs text-zinc-500 font-sans">CLEAR</button><button onclick="a('0')" class="key-btn">0</button>
-            <button onclick="v()" class="key-btn bg-green-900/40 border-green-600 text-sm font-sans uppercase">ENT</button>
+            <button onclick="c()" class="key-btn text-[10px] text-zinc-500 font-sans">CLEAR</button><button onclick="a('0')" class="key-btn">0</button>
+            <button onclick="v()" class="key-btn bg-green-900/40 border-green-600 text-xs font-sans">ENT</button>
         </div>
     </div>
 
-    <div id="panel" class="max-w-md mx-auto hidden pt-1 flex flex-col h-full justify-between w-full">
+    <div id="panel" class="hidden flex-1 flex flex-col justify-between max-w-md mx-auto w-full py-1">
         
-        <div class="bg-zinc-900 border border-zinc-700 rounded-3xl p-3 shadow-xl">
-            <div id="r-disp" class="text-5xl tabular text-red-600 font-black leading-none mb-1 shadow-[0_0_10px_rgba(220,38,38,0.3)]">00:00</div>
-            <div id="st-bar" class="py-0.5 rounded-full text-[9px] border border-zinc-800 bg-black uppercase tracking-widest text-zinc-500">ESTADO: <span id="st-txt">SYNC</span></div>
+        <div class="bg-zinc-900 border border-zinc-700 rounded-2xl py-1">
+            <div id="r-disp" class="text-4xl tabular text-red-600 font-black leading-tight">00:00</div>
+            <div id="st-bar" class="text-[8px] uppercase tracking-widest text-zinc-500 border-t border-zinc-800 mt-1 pt-0.5">ESTADO: <span id="st-txt">SYNC</span></div>
         </div>
 
-        <div class="flex flex-col gap-1.5 mt-1.5">
-            <button onclick="m('CLOCK')" class="w-full bg-red-900/10 py-3.5 rounded-xl text-lg border border-red-900 active:bg-red-600 transition-colors">HORA REAL</button>
-            
-            <div class="grid grid-cols-4 gap-1.5">
-                <button onclick="run(0)" class="bg-zinc-900 h-12 rounded-lg border border-zinc-700 active:bg-red-600">0:00</button>
-                <button onclick="run(20)" class="bg-zinc-900 h-12 rounded-lg border border-zinc-700 active:bg-red-600">0:20</button>
-                <button onclick="run(30)" class="bg-zinc-900 h-12 rounded-lg border border-zinc-700 active:bg-red-600">0:30</button>
-                <button onclick="run(120)" class="bg-zinc-900 h-12 rounded-lg border border-zinc-700 active:bg-red-600">2:00</button>
-            </div>
+        <button onclick="m('CLOCK')" class="w-full bg-red-900/20 py-2.5 rounded-xl text-sm border border-red-700 uppercase">Mostrar Hora Real</button>
+
+        <div class="grid grid-cols-4 gap-1.5">
+            <button onclick="run(0)" class="bg-zinc-900 h-10 rounded-lg border border-zinc-700 text-sm">0:00</button>
+            <button onclick="run(20)" class="bg-zinc-900 h-10 rounded-lg border border-zinc-700 text-sm">0:20</button>
+            <button onclick="run(30)" class="bg-zinc-900 h-10 rounded-lg border border-zinc-700 text-sm">0:30</button>
+            <button onclick="run(120)" class="bg-zinc-900 h-10 rounded-lg border border-zinc-700 text-sm">2:00</button>
         </div>
 
-        <div class="bg-zinc-900 p-2.5 rounded-2xl border border-zinc-800 flex gap-1.5 my-1.5 items-center">
-            <input type="number" id="im" placeholder="MIN" class="w-1/3 bg-white text-black p-2.5 rounded-lg text-center font-bold text-xl">
-            <input type="number" id="is" placeholder="SEG" class="w-1/3 bg-white text-black p-2.5 rounded-lg text-center font-bold text-xl">
-            <button onclick="man()" class="w-1/3 bg-zinc-700 px-3 rounded-lg text-[10px] uppercase text-white font-sans h-10">Cargar</button>
+        <div class="flex gap-1.5 h-10">
+            <input type="number" id="im" placeholder="MIN" class="flex-1 bg-zinc-800 text-white p-1 rounded-lg text-center font-bold text-sm border border-zinc-700 outline-none">
+            <input type="number" id="is" placeholder="SEG" class="flex-1 bg-zinc-800 text-white p-1 rounded-lg text-center font-bold text-sm border border-zinc-700 outline-none">
+            <button onclick="man()" class="bg-zinc-600 px-3 rounded-lg text-[9px] uppercase font-sans">Cargar</button>
         </div>
 
-        <div class="flex flex-col gap-2 relative z-10">
-            <button onclick="start()" class="w-full bg-green-700 py-7 rounded-3xl text-4xl active:bg-green-600 shadow-lg">START</button>
-            <div class="flex gap-2">
-                <button onclick="pause()" class="flex-1 bg-red-800 py-6 rounded-2xl text-lg font-sans uppercase">PAUSE</button>
-                <button onclick="reset()" class="flex-1 bg-zinc-600 py-6 rounded-2xl text-lg font-sans uppercase">RESET</button>
+        <div class="flex flex-col gap-1.5">
+            <button onclick="start()" class="w-full bg-green-700 py-6 rounded-2xl text-5xl shadow-lg border-b-4 border-green-900 active:border-b-0">START</button>
+            <div class="flex gap-1.5 h-14">
+                <button onclick="pause()" class="flex-1 bg-red-900 rounded-xl text-sm font-sans uppercase border-b-4 border-red-950 active:border-b-0">PAUSE</button>
+                <button onclick="reset()" class="flex-1 bg-zinc-700 rounded-xl text-sm font-sans uppercase border-b-4 border-zinc-800 active:border-b-0">RESET</button>
             </div>
         </div>
         
     </div>
 
     <script>
-        const HASH = "MTkyNQ=="; // PIN 1925 protegido
+        const HASH = "MTkyNQ=="; 
         const _s = supabase.createClient("https://shtwudjhrrciwbvygphz.supabase.co", "sb_publishable_mDbvgneSToYLbcHXUgCXFw_sXk3S-Um");
         let cp = "", ls = 20, t = null;
 
         function a(n) { if(cp.length<4) {cp += n; document.getElementById('p-disp').value = cp;} }
         function c() { cp = ""; document.getElementById('p-disp').value = ""; }
-        function v() { if(btoa(cp) === HASH) { document.getElementById('lock').style.display='none'; document.getElementById('panel').classList.remove('hidden'); document.getElementById('panel').classList.add('flex'); init(); } else { alert("DENEGADO"); c(); } }
+        function v() { if(btoa(cp) === HASH) { document.getElementById('lock').classList.add('hidden'); document.getElementById('panel').classList.remove('hidden'); document.getElementById('panel').classList.add('flex'); init(); } else { alert("DENEGADO"); c(); } }
 
         function u(d) {
             clearInterval(t);
             const disp = document.getElementById('r-disp'), txt = document.getElementById('st-txt'), bar = document.getElementById('st-bar');
             txt.innerText = d.status;
             if(d.status === 'CLOCK') {
-                bar.className = "py-0.5 rounded-full text-[9px] border border-red-500 bg-red-950/20 text-red-500";
+                bar.className = "text-[8px] uppercase tracking-widest text-red-500 border-t border-red-900/30 mt-1 pt-0.5";
                 t = setInterval(() => { const n = new Date(); disp.innerText = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`; }, 1000);
             } else if(d.status === 'RUNNING') {
-                bar.className = "py-0.5 rounded-full text-[9px] border border-green-500 bg-green-950/20 text-green-500";
+                bar.className = "text-[8px] uppercase tracking-widest text-green-500 border-t border-green-900/30 mt-1 pt-0.5";
                 t = setInterval(() => {
                     const diff = Math.max(0, Math.ceil((new Date(d.end_at) - new Date()) / 1000));
                     disp.innerText = `${String(Math.floor(diff/60)).padStart(2,'0')}:${String(diff%60).padStart(2,'0')}`;
                 }, 200);
             } else {
-                bar.className = "py-0.5 rounded-full text-[9px] border border-red-500 bg-red-950/20 text-red-500";
+                bar.className = "text-[8px] uppercase tracking-widest text-red-500 border-t border-red-900/30 mt-1 pt-0.5";
                 disp.innerText = `${String(Math.floor(d.seconds/60)).padStart(2,'0')}:${String(d.seconds%60).padStart(2,'0')}`;
             }
         }
