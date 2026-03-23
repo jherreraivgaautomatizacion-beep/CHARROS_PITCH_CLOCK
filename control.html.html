@@ -10,12 +10,30 @@
         .tabular { font-variant-numeric: tabular-nums; }
         .key-btn { background: #18181b; height: 75px; border-radius: 1.2rem; border: 1px solid #3f3f46; font-size: 1.8rem; }
         .key-btn:active { background: #dc2626; transform: scale(0.92); }
+        /* Animación suave para el logo */
+        @keyframes subtlePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .logo-pulse { animation: subtlePulse 2s infinite ease-in-out; }
     </style>
 </head>
-<body class="bg-black text-white p-4 select-none italic font-bold text-center">
+<body class="bg-black text-white p-4 select-none italic font-bold text-center overflow-hidden">
     
     <div id="lock" class="fixed inset-0 bg-black flex flex-col items-center justify-center z-50 p-6">
-        <h1 class="text-red-600 text-4xl font-black mb-10 italic">CHARROS</h1>
+        <div class="mb-10 text-center logo-pulse">
+            <svg class="h-28 w-28 mx-auto" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <circle cx="250" cy="250" r="240" fill="#003366" stroke="#FFD700" stroke-width="15"/>
+                <path d="M150 150 L250 50 L350 150 L300 150 L300 250 L350 250 L250 350 L150 250 L200 250 L200 150 Z" fill="#FFD700" stroke="#FFFFFF" stroke-width="5"/>
+                <text x="50%" y="78%" text-anchor="middle" fill="#FFFFFF" font-family="Arial Black, sans-serif" font-size="65" font-weight="bold" transform="scale(1, 1.3)" style="letter-spacing: 5px;">CHARROS</import>
+                <text x="50%" y="92%" text-anchor="middle" fill="#FFD700" font-family="Arial, sans-serif" font-size="30" font-weight="normal" style="letter-spacing: 2px;">JALISCO</text>
+            </svg>
+            <p class="text-zinc-500 text-[10px] tracking-[0.4em] mt-3 uppercase">Operaciones Estadio Panamericano</p>
+        </div>
+
         <input type="password" id="p-disp" readonly placeholder="••••" class="bg-transparent text-center text-6xl mb-12 outline-none text-red-600 tabular tracking-[0.5em] w-full">
         <div class="grid grid-cols-3 gap-4 w-full max-w-[320px]">
             <button onclick="a('1')" class="key-btn">1</button><button onclick="a('2')" class="key-btn">2</button><button onclick="a('3')" class="key-btn">3</button>
@@ -26,10 +44,17 @@
         </div>
     </div>
 
-    <div id="panel" class="max-w-md mx-auto hidden pt-4">
+    <div id="panel" class="max-w-md mx-auto hidden pt-4 relative">
+        <div class="absolute top-0 right-0 p-2 logo-pulse">
+            <svg class="h-10 w-10" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="250" cy="250" r="240" fill="#003366" stroke="#FFD700" stroke-width="15"/>
+                <path d="M150 150 L250 50 L350 150 L300 150 L300 250 L350 250 L250 350 L150 250 L200 250 L200 150 Z" fill="#FFD700"/>
+            </svg>
+        </div>
+
         <div class="bg-zinc-900 border-2 border-zinc-700 rounded-[2.5rem] p-6 mb-6">
             <div id="r-disp" class="text-7xl tabular text-red-600 font-black mb-2">00:00</div>
-            <div id="st-bar" class="py-1 rounded-full text-[10px] border border-zinc-800 bg-black uppercase tracking-widest">ESTADO: <span id="st-txt">SYNC</span></div>
+            <div id="st-bar" class="py-1 rounded-full text-[10px] border border-zinc-800 bg-black uppercase tracking-widest text-zinc-500">ESTADO: <span id="st-txt">SYNC</span></div>
         </div>
 
         <button onclick="m('CLOCK')" class="w-full bg-red-900/10 py-5 rounded-2xl text-xl mb-6 border border-red-900 active:bg-red-600">MOSTRAR HORA REAL</button>
@@ -44,14 +69,14 @@
         <div class="bg-zinc-900 p-4 rounded-3xl mb-6 border border-zinc-800 flex gap-2">
             <input type="number" id="im" placeholder="MIN" class="w-1/2 bg-white text-black p-3 rounded-xl text-center font-bold">
             <input type="number" id="is" placeholder="SEG" class="w-1/2 bg-white text-black p-3 rounded-xl text-center font-bold">
-            <button onclick="man()" class="bg-zinc-700 px-4 rounded-xl text-[10px] text-white">CARGAR</button>
+            <button onclick="man()" class="bg-zinc-700 px-4 rounded-xl text-[10px] uppercase text-white">Cargar</button>
         </div>
 
-        <div class="flex flex-col gap-4">
-            <button onclick="start()" class="w-full bg-green-700 py-8 rounded-[2rem] text-4xl active:bg-green-600">START</button>
-            <div class="flex gap-4">
-                <button onclick="pause()" class="flex-1 bg-red-800 py-6 rounded-2xl text-xl">PAUSE</button>
-                <button onclick="reset()" class="flex-1 bg-zinc-600 py-6 rounded-2xl text-xl">RESET</button>
+        <div class="flex flex-col gap-4 relative z-10">
+            <button onclick="start()" class="w-full bg-green-700 py-10 rounded-[2rem] text-5xl active:bg-green-600">START</button>
+            <div class="flex gap-4 relative">
+                <button onclick="pause()" class="flex-1 bg-red-900 py-8 rounded-3xl text-xl">PAUSE</button>
+                <button onclick="reset()" class="flex-1 bg-zinc-600 py-8 rounded-3xl text-xl">RESET</button>
             </div>
         </div>
     </div>
