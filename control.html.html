@@ -2,25 +2,23 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>CONTROL - CHARROS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
         .tabular { font-variant-numeric: tabular-nums; }
-        .key-btn { background: #18181b; height: 60px; border-radius: 1rem; border: 1px solid #3f3f46; font-size: 1.5rem; }
+        .key-btn { background: #18181b; height: 55px; border-radius: 1rem; border: 1px solid #3f3f46; font-size: 1.5rem; }
         .key-btn:active { background: #dc2626; transform: scale(0.95); }
         .hidden { display: none !important; }
-        body { touch-action: manipulation; } /* Evita zoom accidental */
+        body { touch-action: manipulation; height: 100dvh; overflow: hidden; }
+        button:active { filter: brightness(1.2); transform: scale(0.98); }
     </style>
 </head>
-<body class="bg-black text-white p-3 select-none italic font-bold text-center overflow-hidden h-screen flex flex-col justify-center">
+<body class="bg-black text-white select-none italic font-bold text-center p-2 flex flex-col">
     
     <div id="lock" class="fixed inset-0 bg-black flex flex-col items-center justify-center z-50 p-4">
-        <div class="mb-6 text-center">
-            <h1 class="text-red-600 text-3xl font-black uppercase italic tracking-tighter">CHARROS</h1>
-            <p class="text-zinc-500 text-[9px] tracking-[0.3em] font-sans">OPERACIONES ESTADIO</p>
-        </div>
+        <h1 class="text-red-600 text-2xl font-black mb-6 italic uppercase tracking-tighter">CHARROS</h1>
         <input type="password" id="p-disp" readonly placeholder="••••" class="bg-transparent text-center text-5xl mb-8 outline-none text-red-600 tabular tracking-[0.4em] w-full">
         <div class="grid grid-cols-3 gap-3 w-full max-w-[280px]">
             <button onclick="a('1')" class="key-btn">1</button><button onclick="a('2')" class="key-btn">2</button><button onclick="a('3')" class="key-btn">3</button>
@@ -31,37 +29,37 @@
         </div>
     </div>
 
-    <div id="panel" class="max-w-md mx-auto hidden w-full flex flex-col h-full justify-between py-2">
+    <div id="panel" class="hidden flex-1 flex flex-col justify-between max-w-md mx-auto w-full">
         
-        <div class="bg-zinc-900 border border-zinc-700 rounded-3xl p-3 shadow-xl">
-            <div id="r-disp" class="text-5xl tabular text-red-600 font-black leading-none mb-1">00:00</div>
-            <div id="st-bar" class="py-0.5 rounded-full text-[9px] border border-zinc-800 bg-black uppercase tracking-widest text-zinc-500">
+        <div class="bg-zinc-900 border border-zinc-700 rounded-2xl py-1 px-3 shadow-lg">
+            <div id="r-disp" class="text-4xl tabular text-red-600 font-black leading-tight">00:00</div>
+            <div id="st-bar" class="text-[8px] border-t border-zinc-800 uppercase tracking-widest text-zinc-500 mt-1">
                 ESTADO: <span id="st-txt">SYNC</span>
             </div>
         </div>
 
-        <div class="flex flex-col gap-2 mt-2">
-            <button onclick="m('CLOCK')" class="w-full bg-red-900/10 py-3 rounded-xl text-lg border border-red-900 active:bg-red-600 transition-colors">HORA REAL</button>
+        <div class="flex flex-col gap-1.5">
+            <button onclick="m('CLOCK')" class="w-full bg-red-900/20 py-2.5 rounded-xl text-sm border border-red-700 active:bg-red-600 uppercase">Mostrar Hora Real</button>
             
-            <div class="grid grid-cols-4 gap-2">
-                <button onclick="run(0)" class="bg-zinc-900 h-12 rounded-lg border border-zinc-700 text-lg active:bg-red-600">0:00</button>
-                <button onclick="run(20)" class="bg-zinc-900 h-12 rounded-lg border border-zinc-700 text-lg active:bg-red-600">0:20</button>
-                <button onclick="run(30)" class="bg-zinc-900 h-12 rounded-lg border border-zinc-700 text-lg active:bg-red-600">0:30</button>
-                <button onclick="run(120)" class="bg-zinc-900 h-12 rounded-lg border border-zinc-700 text-lg active:bg-red-600">2:00</button>
+            <div class="grid grid-cols-4 gap-1.5">
+                <button onclick="run(0)" class="bg-zinc-900 h-10 rounded-lg border border-zinc-700 text-sm active:bg-red-600">0:00</button>
+                <button onclick="run(20)" class="bg-zinc-900 h-10 rounded-lg border border-zinc-700 text-sm active:bg-red-600">0:20</button>
+                <button onclick="run(30)" class="bg-zinc-900 h-10 rounded-lg border border-zinc-700 text-sm active:bg-red-600">0:30</button>
+                <button onclick="run(120)" class="bg-zinc-900 h-10 rounded-lg border border-zinc-700 text-sm active:bg-red-600">2:00</button>
             </div>
         </div>
 
-        <div class="bg-zinc-900 p-2 rounded-2xl border border-zinc-800 flex gap-2 items-center my-2">
-            <input type="number" id="im" placeholder="MIN" class="w-1/3 bg-white text-black p-2 rounded-lg text-center font-bold text-lg">
-            <input type="number" id="is" placeholder="SEG" class="w-1/3 bg-white text-black p-2 rounded-lg text-center font-bold text-lg">
-            <button onclick="man()" class="w-1/3 bg-zinc-700 h-10 rounded-lg text-[9px] uppercase text-white font-sans">Cargar</button>
+        <div class="flex gap-1.5 items-center">
+            <input type="number" id="im" placeholder="MIN" class="flex-1 bg-zinc-800 text-white p-2 rounded-lg text-center font-bold text-sm border border-zinc-700 outline-none">
+            <input type="number" id="is" placeholder="SEG" class="flex-1 bg-zinc-800 text-white p-2 rounded-lg text-center font-bold text-sm border border-zinc-700 outline-none">
+            <button onclick="man()" class="bg-zinc-600 px-3 py-2.5 rounded-lg text-[9px] uppercase font-sans">Cargar</button>
         </div>
 
-        <div class="flex flex-col gap-2 mb-2">
-            <button onclick="start()" class="w-full bg-green-700 py-6 rounded-3xl text-4xl active:bg-green-600 shadow-lg">START</button>
-            <div class="flex gap-2">
-                <button onclick="pause()" class="flex-1 bg-red-900 py-5 rounded-2xl text-lg font-sans uppercase">PAUSE</button>
-                <button onclick="reset()" class="flex-1 bg-zinc-600 py-5 rounded-2xl text-lg font-sans uppercase">RESET</button>
+        <div class="flex flex-col gap-1.5">
+            <button onclick="start()" class="w-full bg-green-700 py-6 rounded-2xl text-4xl shadow-lg border-b-4 border-green-900">START</button>
+            <div class="flex gap-1.5 h-16">
+                <button onclick="pause()" class="flex-1 bg-red-900 rounded-xl text-sm font-sans uppercase border-b-4 border-red-950">PAUSE</button>
+                <button onclick="reset()" class="flex-1 bg-zinc-700 rounded-xl text-sm font-sans uppercase border-b-4 border-zinc-900">RESET</button>
             </div>
         </div>
         
@@ -74,23 +72,23 @@
 
         function a(n) { if(cp.length<4) {cp += n; document.getElementById('p-disp').value = cp;} }
         function c() { cp = ""; document.getElementById('p-disp').value = ""; }
-        function v() { if(btoa(cp) === HASH) { document.getElementById('lock').classList.add('hidden'); document.getElementById('panel').classList.remove('hidden'); init(); } else { alert("DENEGADO"); c(); } }
+        function v() { if(btoa(cp) === HASH) { document.getElementById('lock').classList.add('hidden'); document.getElementById('panel').classList.remove('hidden'); document.getElementById('panel').classList.add('flex'); init(); } else { alert("DENEGADO"); c(); } }
 
         function u(d) {
             clearInterval(t);
             const disp = document.getElementById('r-disp'), txt = document.getElementById('st-txt'), bar = document.getElementById('st-bar');
             txt.innerText = d.status;
             if(d.status === 'CLOCK') {
-                bar.className = "py-0.5 rounded-full text-[9px] border border-red-500 bg-red-950/20 text-red-500";
+                bar.className = "text-[8px] border-t border-red-900/50 text-red-500 mt-1";
                 t = setInterval(() => { const n = new Date(); disp.innerText = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`; }, 1000);
             } else if(d.status === 'RUNNING') {
-                bar.className = "py-0.5 rounded-full text-[9px] border border-green-500 bg-green-950/20 text-green-500";
+                bar.className = "text-[8px] border-t border-green-900/50 text-green-500 mt-1";
                 t = setInterval(() => {
                     const diff = Math.max(0, Math.ceil((new Date(d.end_at) - new Date()) / 1000));
                     disp.innerText = `${String(Math.floor(diff/60)).padStart(2,'0')}:${String(diff%60).padStart(2,'0')}`;
                 }, 200);
             } else {
-                bar.className = "py-0.5 rounded-full text-[9px] border border-red-500 bg-red-950/20 text-red-500";
+                bar.className = "text-[8px] border-t border-red-900/50 text-red-500 mt-1";
                 disp.innerText = `${String(Math.floor(d.seconds/60)).padStart(2,'0')}:${String(d.seconds%60).padStart(2,'0')}`;
             }
         }
