@@ -110,7 +110,7 @@
             }
         }
         async function m(st) { await _s.from('RELOJ').update({status: st}).eq('id', 1); }
-        async function run(s) { ls = s; const e = new Date(); e.setMilliseconds(e.getMilliseconds() + (s * 1000) + 800); await _s.from('RELOJ').update({status:'RUNNING', seconds:s, end_at:e.toISOString()}).eq('id', 1); }
+        async function run(s) { ls = s; const e = new Date(); e.setMilliseconds(e.getMilliseconds() + (s * 1000) + 400); await _s.from('RELOJ').update({status:'RUNNING', seconds:s, end_at:e.toISOString()}).eq('id', 1); }
         async function man() { const s = (parseInt(document.getElementById('im').value)||0)*60 + (parseInt(document.getElementById('is').value)||0); ls = s; await _s.from('RELOJ').update({status:'PAUSED', seconds:s}).eq('id', 1); }
         async function start() { const e = new Date(); e.setSeconds(e.getSeconds() + ls); await _s.from('RELOJ').update({status:'RUNNING', end_at:e.toISOString()}).eq('id', 1); }
         async function pause() {
